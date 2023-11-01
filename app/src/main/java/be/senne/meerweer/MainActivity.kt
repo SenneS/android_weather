@@ -19,16 +19,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import be.senne.meerweer.ui.screens.home.HomeScreen
+import be.senne.meerweer.ui.screens.home.HomeViewModel
+import be.senne.meerweer.ui.screens.search.SearchScreen
+import be.senne.meerweer.ui.screens.search.SearchViewModel
+import be.senne.meerweer.ui.screens.settings.SettingsScreen
+import be.senne.meerweer.ui.screens.settings.SettingsViewModel
 import be.senne.meerweer.ui.theme.HetWeerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 sealed class NavDestination(val route: String) {
     object Home : NavDestination("home")
@@ -49,7 +56,7 @@ data class NavigationItem(
     }
 }
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +82,14 @@ class MainActivity : ComponentActivity() {
                                     selected = index == selectedIndex,
                                     onClick = {
                                         Log.wtf("", "index = $index, selectedIndex = $selectedIndex");
-                                        selectedIndex = index;
-                                        Log.wtf("", "index = $index, selectedIndex = $selectedIndex");
-                                        navController.navigate(item.route)
+                                        if(selectedIndex != index) {
+                                            selectedIndex = index;
+                                            Log.wtf(
+                                                "",
+                                                "index = $index, selectedIndex = $selectedIndex"
+                                            );
+                                            navController.navigate(item.route)
+                                        }
                                     },
                                     icon = {
                                         Icon(
@@ -93,13 +105,19 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(paddingValues = it)
                         ) {
                             composable(route = NavDestination.Home.route) {
-                                HomeScreen(HomeUiState(it.destination.route.orEmpty()), navController)
+                                val viewModel = hiltViewModel<HomeViewModel>();
+                                val state = viewModel.state;
+                                HomeScreen(state = state, onEvent = viewModel::onEvent)
                             }
                             composable(route = NavDestination.Search.route) {
-                                HomeScreen(HomeUiState(it.destination.route.orEmpty()), navController)
+                                val viewModel = hiltViewModel<SearchViewModel>();
+                                val state = viewModel.state;
+                                SearchScreen(state = state, onEvent = viewModel::onEvent)
                             }
                             composable(route = NavDestination.Settings.route) {
-                                HomeScreen(HomeUiState(it.destination.route.orEmpty()), navController)
+                                val viewModel = hiltViewModel<SettingsViewModel>();
+                                val state = viewModel.state;
+                                SettingsScreen(state = state, onEvent = viewModel::onEvent)
                             }
                         }
                     }
