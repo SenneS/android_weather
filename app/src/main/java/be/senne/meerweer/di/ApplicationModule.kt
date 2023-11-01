@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import be.senne.meerweer.data.local.WeatherDao
 import be.senne.meerweer.data.local.WeatherDatabase
+import be.senne.meerweer.data.remote.GeocodingService
+import be.senne.meerweer.data.remote.WeatherService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -13,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -32,4 +35,12 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideWeatherDatabase(@ApplicationContext appContext: Context): WeatherDatabase = Room.databaseBuilder(appContext, WeatherDatabase::class.java, "weatherdb").build()
+
+    @Singleton
+    @Provides
+    fun provideWeatherService(retrofit: Retrofit): WeatherService = retrofit.create(WeatherService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideGeocodingService(retrofit: Retrofit): GeocodingService = retrofit.create(GeocodingService::class.java)
 }
