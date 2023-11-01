@@ -17,6 +17,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import be.senne.meerweer.ui.nav.NavDestination
+import be.senne.meerweer.ui.nav.NavItem
 import be.senne.meerweer.ui.screens.home.HomeScreen
 import be.senne.meerweer.ui.screens.home.HomeViewModel
 import be.senne.meerweer.ui.screens.search.SearchScreen
@@ -36,26 +39,6 @@ import be.senne.meerweer.ui.screens.settings.SettingsScreen
 import be.senne.meerweer.ui.screens.settings.SettingsViewModel
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import dagger.hilt.android.AndroidEntryPoint
-
-sealed class NavDestination(val route: String) {
-    object Home : NavDestination("home")
-    object Search : NavDestination("search")
-    object Settings : NavDestination("settings")
-}
-data class NavigationItem(
-    val label : String = "",
-    val icon : ImageVector = Icons.Filled.Home,
-    val route : String = ""
-) {
-    fun getNavigationItems() : List<NavigationItem> {
-        return listOf(
-            NavigationItem("Home", icon=Icons.Filled.Home, route = NavDestination.Home.route),
-            NavigationItem("Search", icon=Icons.Filled.Search, route = NavDestination.Search.route),
-            NavigationItem("Settings", icon=Icons.Filled.Settings, route = NavDestination.Settings.route),
-        )
-    }
-}
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +60,7 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         bottomBar = {NavigationBar {
-                            NavigationItem().getNavigationItems().forEachIndexed { index, item ->
+                            NavItem().getNavigationItems().forEachIndexed { index, item ->
                                 NavigationBarItem(
                                     selected = index == selectedIndex,
                                     onClick = {
@@ -96,6 +79,9 @@ class MainActivity : ComponentActivity() {
                                             imageVector = item.icon,
                                             contentDescription = item.label
                                         )
+                                    },
+                                    label = {
+                                        Text(text = item.label)
                                     })
                             }
                     }}) {
