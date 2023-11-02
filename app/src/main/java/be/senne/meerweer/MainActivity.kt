@@ -14,7 +14,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -89,17 +88,17 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable(route = NavDestination.Home.route) {
                                 val viewModel = hiltViewModel<HomeViewModel>();
-                                val state = viewModel.state2.collectAsStateWithLifecycle();
+                                val state = viewModel.state.collectAsStateWithLifecycle();
                                 HomeScreen(state = state, onEvent = viewModel::onEvent)
                             }
                             composable(route = NavDestination.Search.route) {
                                 val viewModel = hiltViewModel<SearchViewModel>();
-                                val state = viewModel.state;
+                                val state = viewModel.state.collectAsStateWithLifecycle();
                                 SearchScreen(state = state, onEvent = viewModel::onEvent)
                             }
                             composable(route = NavDestination.Settings.route) {
                                 val viewModel = hiltViewModel<SettingsViewModel>();
-                                val state = viewModel.state;
+                                val state = viewModel.state.collectAsStateWithLifecycle();
                                 SettingsScreen(state = state, onEvent = viewModel::onEvent)
                             }
                         }

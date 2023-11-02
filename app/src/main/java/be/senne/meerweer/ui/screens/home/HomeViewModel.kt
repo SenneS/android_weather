@@ -1,9 +1,6 @@
 package be.senne.meerweer.ui.screens.home
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,11 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    var state by mutableStateOf(HomeState(""))
-        private set
 
-    private val _state2 = MutableStateFlow(HomeState(""))
-    val state2: StateFlow<HomeState> = _state2.asStateFlow()
+    private val _state = MutableStateFlow(HomeState())
+    val state: StateFlow<HomeState> = _state.asStateFlow()
 
 
     fun onEvent(event : HomeEvent) {
@@ -32,7 +27,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun onButton1Clicked(id : String) {
         Log.wtf("", "Button 1 clicked: $id")
         viewModelScope.launch {
-            _state2.value = _state2.value.copy(test = "Hello World")
+            _state.value = _state.value.copy(test = "Hello World")
         }
     }
 
