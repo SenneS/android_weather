@@ -7,5 +7,8 @@ import androidx.room.PrimaryKey
 data class WeatherLocationEntity(
     @PrimaryKey
     val id : Long,
-    val name : String
+    val name : String,
+    val latitude : Double,
+    val longitude : Double,
+    val elevation : Long
 )

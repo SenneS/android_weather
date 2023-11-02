@@ -53,6 +53,9 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
         if(ui.areLocationsLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
+        else if(ui.weatherLocations.isEmpty()) {
+            Text("No Saved Locations", modifier = Modifier.align(Alignment.Center))
+        }
         else {
             val pagerState = rememberPagerState(pageCount = { 10 })
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
