@@ -50,7 +50,7 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
         else {
             val pagerState = rememberPagerState(pageCount = { ui.weatherLocations.size })
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
-                WeatherCard(weatherData = fakeWeatherData())
+                WeatherCard(weatherData = ui.currentWeatherData)
             }
             Row(
                 Modifier

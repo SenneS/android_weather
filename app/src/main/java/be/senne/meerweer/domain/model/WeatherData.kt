@@ -1,17 +1,17 @@
 package be.senne.meerweer.domain.model
 
 data class WeatherData(
-    val name : String,
-    val latitude : Double,
-    val longitude : Double,
-    val elevation : Long,
+    val name : String ="",
+    val latitude : Double = 0.0,
+    val longitude : Double = 0.0,
+    val elevation : Long = 0,
 
-    val weatherCode: WeatherCode,
-    val temperature: Double,
-    val windspeed: Double,
-    val windgusts: Double,
-    val windDirection: WeatherWindDirection,
+    val weatherCode: WeatherCode = WeatherCode.CLEAR_SKY,
+    val temperature: Double = 0.0,
+    val windspeed: Double = 0.0,
+    val windgusts: Double = 0.0,
+    val windDirection: WeatherWindDirection = WeatherWindDirection.SOUTH,
 
-    val hourlyData: List<WeatherHourData>,
-    val dailyData: List<WeatherDayData>
+    val hourlyData: List<WeatherHourData> = emptyList(),
+    val dailyData: List<WeatherDayData> = emptyList()
 )

@@ -8,6 +8,7 @@ import be.senne.meerweer.data.local.WeatherLocationEntity
 import be.senne.meerweer.data.local.mapper.weatherLocationEntitiesToDomain
 import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.WeatherRepository
+import be.senne.meerweer.ui.components.fakeWeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,6 +29,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchWeatherLocations()
+        _state.value = _state.value.copy(currentWeatherData = fakeWeatherData())
     }
 
     private fun fetchWeatherLocations() {

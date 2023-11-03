@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.ExpandLess
@@ -111,11 +112,20 @@ fun WeatherMainDataSection(weatherData: WeatherData) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherHourSection(weatherData: WeatherData) {
+    val hourData = weatherData.hourlyData
     LazyRow() {
-        items(24) {
-            Text(text = "Hour $it", modifier=Modifier.padding(16.dp))
+        items(hourData) {
+            Card {
+                Column {
+                    Text(text = "${it.time.hour}h")
+                    Text(text = "${it.temperature}°C")
+                    Text(text = "${it.precipitation}%")
+                    Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloudy")
+                }
+            }
         }
     }
 }
@@ -147,6 +157,7 @@ fun WeatherDaySection(weatherData: WeatherData) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun fakeWeatherData() : WeatherData {
     val location = "Brussels"
     val latitude = 0.0
@@ -154,16 +165,45 @@ fun fakeWeatherData() : WeatherData {
     val elevation = 0L
     val weatherCode = WeatherCode.CLEAR_SKY
     val temperature = 0.0
-    val windspeed = 0.0
-    val windgusts = 0.0
+    val windspeed = 100.0
+    val windgusts = 100.0
     val windDirection = WeatherWindDirection.SOUTH
 
     val hourlyData = listOf<WeatherHourData>(
-        WeatherHourData(ZonedDateTime.now(), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection)
+        WeatherHourData(ZonedDateTime.now(), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(1), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(2), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(3), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(4), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(5), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(6), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(7), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(8), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(9), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(10), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(11), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(12), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(13), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(14), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(15), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(16), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(17), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(18), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(19), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(20), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(21), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(22), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
+        WeatherHourData(ZonedDateTime.now().plusHours(23), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
     )
     val dailyData = listOf<WeatherDayData>(
-        WeatherDayData(ZonedDateTime.now(), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection)
-    )
+        WeatherDayData(ZonedDateTime.now(), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(1), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(2), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(3), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(4), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(5), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        WeatherDayData(ZonedDateTime.now().plusDays(6), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
+        )
 
 
     val weatherData = WeatherData(
@@ -183,7 +223,6 @@ fun fakeWeatherData() : WeatherData {
     return weatherData
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview
 fun WeatherCardPreview() {
