@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import be.senne.meerweer.domain.model.WeatherData
+import be.senne.meerweer.ui.components.WeatherCard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -36,18 +38,6 @@ import kotlinx.coroutines.flow.asStateFlow
 @Composable
 fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
     val ui = state.value;
-    /*
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = ui.test)
-
-        Button(onClick = {onEvent(HomeEvent.Button1Clicked("1"))}) {
-            Text(ui.test)
-        }
-        Button(onClick = {onEvent(HomeEvent.Button2Clicked("1"))}) {
-            Text(text = "Button 2")
-        }
-    }
-     */
 
     Box(modifier = Modifier.fillMaxSize()) {
         if(ui.areLocationsLoading) {
@@ -57,9 +47,9 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
             Text("No Saved Locations", modifier = Modifier.align(Alignment.Center))
         }
         else {
-            val pagerState = rememberPagerState(pageCount = { 10 })
+            val pagerState = rememberPagerState(pageCount = { ui.weatherLocations.size })
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
-                Text(text = "Page $it")
+                WeatherCard(weatherData = WeatherData(ui.weatherLocations[it].name, 0.0, 0.0, 0))
             }
             Row(
                 Modifier
