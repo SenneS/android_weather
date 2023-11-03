@@ -32,22 +32,15 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             searchDebounce.debounce(1000).collect {
                 delay(3000)
-                if(it.isEmpty()) {
-                    _state.value = _state.value.copy(searchResults = listOf(), isSearching = false)
-                }
-                else {
-                    /*
-                    val locations = withContext(Dispatchers.IO) {
+                if(it.isNotEmpty()) {
+                    val locationsReq = withContext(Dispatchers.IO) {
                         weatherRepository.searchLocations(it);
                     }
-                    */
-
-                    _state.value = _state.value.copy(searchResults = listOf(
-                        WeatherLocation("Location 1", 0.0, 0.0, 0),
-                        WeatherLocation("Location 2", 0.0, 0.0, 0),
-                        WeatherLocation("Location 3", 0.0, 0.0, 0),
-                        WeatherLocation("Location 4", 0.0, 0.0, 0),
-                    ), isSearching = false)
+                    val locations = locationsReq.getOrDefault(listOf())
+                    _state.value = _state.value.copy(searchResults = locations, isSearching = false)
+                }
+                else {
+                    _state.value = _state.value.copy(searchResults = listOf(), isSearching = false)
                 }
 
 

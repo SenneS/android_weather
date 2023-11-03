@@ -7,6 +7,7 @@ import be.senne.meerweer.data.remote.WeatherService
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import kotlinx.coroutines.delay
+import java.io.IOException
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -20,7 +21,13 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchLocations(name: String): Result<List<WeatherLocation>> {
-        TODO("Not yet implemented")
+        val searchResponse = geocodingService.searchLocation(name)
+        if(searchResponse.results == null || searchResponse.error != null) {
+            return Result.failure(IOException("API Failure"))
+        }
+        return Result.success(searchResponse.results.map {
+            WeatherLocation(it.name, it.latitude, it.longitude, it.elevation)
+        })
     }
 
     override suspend fun getSavedLocations(): Result<List<WeatherLocation>> {
