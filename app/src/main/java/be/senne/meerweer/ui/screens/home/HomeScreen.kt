@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.ui.components.WeatherCard
+import be.senne.meerweer.ui.components.fakeWeatherData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -49,7 +50,7 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
         else {
             val pagerState = rememberPagerState(pageCount = { ui.weatherLocations.size })
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
-                WeatherCard(weatherData = WeatherData(ui.weatherLocations[it].name, 0.0, 0.0, 0))
+                WeatherCard(weatherData = fakeWeatherData())
             }
             Row(
                 Modifier
