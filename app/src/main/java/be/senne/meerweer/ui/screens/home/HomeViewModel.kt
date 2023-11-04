@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -44,7 +45,7 @@ class HomeViewModel @Inject constructor(
                 val locs = locations.getOrDefault(ArrayList())
                 _state.value = _state.value.copy(locationsAreLoading = false, weatherData = List(locs.size){
                     val loc = locs[it]
-                    WeatherDataUI(loc.uuid, loc.name)
+                    WeatherDataUI(loc.uuid, Instant.EPOCH, loc.name)
                 })
                 if(locs.isNotEmpty()) {
                     OnRefreshWeatherData(locs.first().uuid)
@@ -65,7 +66,17 @@ class HomeViewModel @Inject constructor(
             _state.value = _state.value.copy(dataIsLoading = true)
             Log.wtf("", "OnRefreshWeatherData(uuid: $uuid)")
             delay(1000)
-            _state.value = _state.value.copy(dataIsLoading = false, weatherData = List(3){ fakeWeatherData()})
+
+            val newData = fakeWeatherData()
+            val list = _state.value.weatherData.toMutableList()
+
+            _state.value = _state.value.copy(dataIsLoading = false, weatherData = list.also {
+                for(i in 0 until list.size) {
+                    if(it[i].locationUuid == uuid) {
+                        it[i] = newData
+                    }
+                }
+            })
         }
     }
 }

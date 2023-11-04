@@ -57,6 +57,7 @@ import be.senne.meerweer.ui.model.WeatherDayDataUI
 import be.senne.meerweer.ui.model.WeatherHourDataUI
 import be.senne.meerweer.utils.CustomNestedScrollConnection
 import be.senne.meerweer.utils.formatToHHmm
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
@@ -218,6 +219,7 @@ fun fakeWeatherData() : WeatherDataUI {
 
     val weatherData = WeatherDataUI(
         UUID.randomUUID(),
+        timestamp = Instant.now(),
         location,
         currentWeatherData,
         hourlyWeatherData,

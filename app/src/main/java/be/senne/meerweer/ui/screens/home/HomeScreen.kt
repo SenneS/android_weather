@@ -25,6 +25,7 @@ import androidx.compose.material3.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -39,6 +40,8 @@ import be.senne.meerweer.ui.components.WeatherCard
 import be.senne.meerweer.ui.components.fakeWeatherData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.Duration
+import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -57,7 +60,11 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize(), userScrollEnabled = !ui.dataIsLoading) {
                 val data = ui.weatherData[it]
 
-                onEvent(HomeEvent.RefreshWeatherData(data.locationUuid))
+
+                if(data.timestamp.isBefore(Instant.now().minus(Duration.ofMinutes(5)))) {
+                    onEvent(HomeEvent.RefreshWeatherData(data.locationUuid))
+                }
+
                 val pullRefreshState = rememberPullRefreshState(
                     refreshing = ui.dataIsLoading,
                     onRefresh = { onEvent(HomeEvent.RefreshWeatherData(data.locationUuid)) }
