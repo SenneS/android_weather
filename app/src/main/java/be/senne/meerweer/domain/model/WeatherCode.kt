@@ -5,5 +5,17 @@ enum class WeatherCode {
     CLOUDY,
     RAIN,
     SNOW,
-    THUNDER
+    THUNDER;
+
+    fun display() : String {
+        val displ : String = when(this) {
+            CLEAR_SKY -> "Clear Sky"
+            CLOUDY -> "Cloudy"
+            RAIN -> "Rainy"
+            SNOW -> "Snowy"
+            THUNDER -> "Thunder"
+        }
+        return displ
+    }
+
 }

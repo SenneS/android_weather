@@ -8,6 +8,7 @@ data class WeatherData(
 
     val weatherCode: WeatherCode = WeatherCode.CLEAR_SKY,
     val temperature: Double = 0.0,
+    val precipitation: Double = 0.0,
     val windspeed: Double = 0.0,
     val windgusts: Double = 0.0,
     val windDirection: WeatherWindDirection = WeatherWindDirection.SOUTH,

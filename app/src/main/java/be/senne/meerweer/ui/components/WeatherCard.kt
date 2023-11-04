@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -37,14 +39,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import be.senne.meerweer.R
 import be.senne.meerweer.domain.model.WeatherCode
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherDayData
 import be.senne.meerweer.domain.model.WeatherHourData
 import be.senne.meerweer.domain.model.WeatherWindDirection
+import be.senne.meerweer.utils.formatToHHmm
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 
@@ -90,24 +95,24 @@ fun WeatherMainDataSection(weatherData: WeatherData) {
 
     Row {
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(imageVector = Icons.Default.KeyboardDoubleArrowRight, contentDescription = "")
-            Text(text = "Wind ${weatherData.windspeed}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall)
+            Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = "", modifier=Modifier.size(48.dp))
+            Text(text = "Wind: ${weatherData.windspeed}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(imageVector = Icons.Default.KeyboardDoubleArrowRight, contentDescription = "")
-            Text(text = "Wind Direction", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall)
+            Icon(painter = painterResource(R.drawable.compass), contentDescription = "", modifier=Modifier.size(48.dp))
+            Text(text = "Wind Direction: ${weatherData.windDirection.display()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(imageVector = Icons.Default.KeyboardDoubleArrowRight, contentDescription = "")
-            Text(text = "Precipitation", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall)
+            Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = "", modifier=Modifier.size(48.dp))
+            Text(text = "Precipitation: ${weatherData.precipitation}mm", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(imageVector = Icons.Default.KeyboardDoubleArrowRight, contentDescription = "")
-            Text(text = "Sunrise ${dayNow.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall)
+            Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = "", modifier=Modifier.size(48.dp))
+            Text(text = "Sunrise: ${dayNow.sunrise.formatToHHmm()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(imageVector = Icons.Default.KeyboardDoubleArrowRight, contentDescription = "")
-            Text(text = "Sunset ${dayNow.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall)
+            Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = "", modifier=Modifier.size(48.dp))
+            Text(text = "Sunset: ${dayNow.sunset.formatToHHmm()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
     }
 }
@@ -116,10 +121,12 @@ fun WeatherMainDataSection(weatherData: WeatherData) {
 @Composable
 fun WeatherHourSection(weatherData: WeatherData) {
     val hourData = weatherData.hourlyData
-    LazyRow() {
+    LazyRow(
+        contentPadding = PaddingValues(16.dp)
+    ) {
         items(hourData) {
-            Card {
-                Column {
+            Card(modifier = Modifier.padding(horizontal=15.dp).widthIn(max=50.dp)) {
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = "${it.time.hour}h")
                     Text(text = "${it.temperature}°C")
                     Text(text = "${it.precipitation}%")
@@ -140,7 +147,7 @@ fun WeatherDaySection(weatherData: WeatherData) {
                 .fillMaxWidth()
                 .padding(5.dp)) {
                 var expanded by remember { mutableStateOf(false) }
-                Row(modifier = Modifier.animateContentSize()) {
+                Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { expanded = !expanded }) {
                         Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
                     }
@@ -165,6 +172,7 @@ fun fakeWeatherData() : WeatherData {
     val elevation = 0L
     val weatherCode = WeatherCode.CLEAR_SKY
     val temperature = 0.0
+    val precipitation = 0.0
     val windspeed = 100.0
     val windgusts = 100.0
     val windDirection = WeatherWindDirection.SOUTH
@@ -213,6 +221,7 @@ fun fakeWeatherData() : WeatherData {
         elevation,
         weatherCode,
         temperature,
+        precipitation,
         windspeed,
         windgusts,
         windDirection,
