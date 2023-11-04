@@ -3,25 +3,20 @@ package be.senne.meerweer.ui.screens.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import be.senne.meerweer.data.local.WeatherDao
-import be.senne.meerweer.data.local.WeatherLocationEntity
-import be.senne.meerweer.data.local.mapper.weatherLocationEntitiesToDomain
-import be.senne.meerweer.domain.model.WeatherLocation
+import be.senne.meerweer.domain.repository.PreferencesRepository
 import be.senne.meerweer.domain.repository.WeatherRepository
 import be.senne.meerweer.ui.components.fakeWeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository
+    private val weatherRepository: WeatherRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
