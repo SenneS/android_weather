@@ -9,6 +9,6 @@ data class WeatherDayDataUI(
     val precipitation: String,
     val maxWind: String,
     val maxGusts: String,
-    val windDirection: WeatherWindDirection,
+    val windDirection: String,
     val icon: String
 )

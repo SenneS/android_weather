@@ -8,6 +8,7 @@ import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import kotlinx.coroutines.delay
 import java.io.IOException
+import java.util.UUID
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -26,16 +27,16 @@ class WeatherRepositoryImpl @Inject constructor(
             return Result.failure(IOException("API Failure"))
         }
         return Result.success(searchResponse.results.map {
-            WeatherLocation(it.name, it.latitude, it.longitude, it.elevation)
+            WeatherLocation(UUID.randomUUID(), it.name, it.latitude, it.longitude, it.elevation)
         })
     }
 
     override suspend fun getSavedLocations(): Result<List<WeatherLocation>> {
         delay(1000)
         return Result.success(listOf(
-            WeatherLocation("Location 1", 0.0, 0.0, 0),
-            WeatherLocation("Location 2", 0.0, 0.0, 0),
-            WeatherLocation("Location 3", 0.0, 0.0, 0)
+            WeatherLocation(UUID.randomUUID(),"Location 1", 0.0, 0.0, 0),
+            WeatherLocation(UUID.randomUUID(),"Location 2", 0.0, 0.0, 0),
+            WeatherLocation(UUID.randomUUID(),"Location 3", 0.0, 0.0, 0)
         ))
         TODO("Not yet implemented")
     }

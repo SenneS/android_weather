@@ -14,11 +14,16 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pullrefresh.PullRefreshIndicator
+import androidx.compose.material3.pullrefresh.pullRefresh
+import androidx.compose.material3.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -41,16 +46,32 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
     val ui = state.value;
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if(ui.areLocationsLoading) {
+        if(ui.locationsAreLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-        else if(ui.weatherLocations.isEmpty()) {
+        else if(ui.weatherData.isEmpty()) {
             Text("No Saved Locations", modifier = Modifier.align(Alignment.Center))
         }
         else {
-            val pagerState = rememberPagerState(pageCount = { ui.weatherLocations.size })
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
-                WeatherCard(weatherData = ui.currentWeatherData)
+            val pagerState = rememberPagerState(pageCount = { ui.weatherData.size })
+            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize(), userScrollEnabled = !ui.dataIsLoading) {
+                val data = ui.weatherData[it]
+
+                onEvent(HomeEvent.RefreshWeatherData(data.locationUuid))
+                val pullRefreshState = rememberPullRefreshState(
+                    refreshing = ui.dataIsLoading,
+                    onRefresh = { onEvent(HomeEvent.RefreshWeatherData(data.locationUuid)) }
+                )
+
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .pullRefresh(pullRefreshState)) {
+                    if(!ui.dataIsLoading) {
+                        WeatherCard(uiData = data)
+                    }
+                    PullRefreshIndicator(refreshing = ui.dataIsLoading, state = pullRefreshState, modifier=Modifier.align(Alignment.TopCenter))
+                }
+
             }
             Row(
                 Modifier
@@ -78,7 +99,7 @@ fun HomeScreen(state: State<HomeState>, onEvent: (HomeEvent) -> Unit) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    val __state = MutableStateFlow(HomeState("ABC"))
+    val __state = MutableStateFlow(HomeState())
     val _state = __state.asStateFlow()
     val state = _state.collectAsStateWithLifecycle()
     HomeScreen(state = state) {}

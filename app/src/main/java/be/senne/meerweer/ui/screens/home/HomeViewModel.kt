@@ -3,14 +3,18 @@ package be.senne.meerweer.ui.screens.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.PreferencesRepository
 import be.senne.meerweer.domain.repository.WeatherRepository
 import be.senne.meerweer.ui.components.fakeWeatherData
+import be.senne.meerweer.ui.model.WeatherDataUI
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,17 +26,29 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
+
+    private var weatherLocations : List<WeatherLocation> = emptyList()
+
     init {
         fetchWeatherLocations()
-        _state.value = _state.value.copy(currentWeatherData = fakeWeatherData())
+        //_state.value = _state.value.copy(currentWeatherData = fakeWeatherData())
     }
 
     private fun fetchWeatherLocations() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(areLocationsLoading = true)
+            _state.value = _state.value.copy(locationsAreLoading = true)
             val locations = weatherRepository.getSavedLocations();
             if(locations.isSuccess) {
-                _state.value = _state.value.copy(weatherLocations = locations.getOrDefault(ArrayList()), areLocationsLoading = false)
+                weatherLocations = locations.getOrDefault(emptyList())
+
+                val locs = locations.getOrDefault(ArrayList())
+                _state.value = _state.value.copy(locationsAreLoading = false, weatherData = List(locs.size){
+                    val loc = locs[it]
+                    WeatherDataUI(loc.uuid, loc.name)
+                })
+                if(locs.isNotEmpty()) {
+                    OnRefreshWeatherData(locs.first().uuid)
+                }
             }
         }
     }
@@ -40,6 +56,16 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event : HomeEvent) {
         when(event) {
             is HomeEvent.RefreshWeatherLocations -> fetchWeatherLocations()
+            is HomeEvent.RefreshWeatherData -> OnRefreshWeatherData(event.uuid)
+        }
+    }
+
+    private fun OnRefreshWeatherData(uuid : UUID) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(dataIsLoading = true)
+            Log.wtf("", "OnRefreshWeatherData(uuid: $uuid)")
+            delay(1000)
+            _state.value = _state.value.copy(dataIsLoading = false, weatherData = List(3){ fakeWeatherData()})
         }
     }
 }

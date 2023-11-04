@@ -51,89 +51,84 @@ import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherDayData
 import be.senne.meerweer.domain.model.WeatherHourData
 import be.senne.meerweer.domain.model.WeatherWindDirection
+import be.senne.meerweer.ui.model.WeatherCurrentDataUI
+import be.senne.meerweer.ui.model.WeatherDataUI
+import be.senne.meerweer.ui.model.WeatherDayDataUI
+import be.senne.meerweer.ui.model.WeatherHourDataUI
 import be.senne.meerweer.utils.CustomNestedScrollConnection
 import be.senne.meerweer.utils.formatToHHmm
 import java.time.ZonedDateTime
+import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @Composable
-fun WeatherCard(weatherData: WeatherData) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            item {WeatherHeaderSection(weatherData) }
+fun WeatherCard(uiData: WeatherDataUI) {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            item {WeatherHeaderSection(uiData) }
             item {Divider(modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)) }
-            item {WeatherMainDataSection(weatherData) }
+            item {WeatherMainDataSection(uiData.now) }
             item {Divider(modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)) }
-            item {WeatherHourSection(weatherData) }
+            item {WeatherHourSection(uiData.hourly) }
             item {Divider(modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)) }
-            item {WeatherDaySection(weatherData) }
+            item {WeatherDaySection(uiData.daily) }
             item {Divider(modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)) }
             item {Spacer(modifier = Modifier.height(40.dp))}
-        }
     }
 }
 
 @Composable
-fun WeatherHeaderSection(weatherData: WeatherData) {
+fun WeatherHeaderSection(uiData: WeatherDataUI) {
     Box(modifier = Modifier.scale(1f)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(80.dp))
             Column {
-                Text(text = weatherData.name)
-                Text(text = "${weatherData.temperature}°C")
+                Text(text = uiData.location)
+                Text(text = "${uiData.now.temperature}°C")
             }
         }
     }
-
 }
 
 @Composable
-fun WeatherMainDataSection(weatherData: WeatherData) {
-    //Find Today
-
-    val hourNow = weatherData.hourlyData[0]
-    val dayNow = weatherData.dailyData[0]
+fun WeatherMainDataSection(uiData: WeatherCurrentDataUI) {
 
     Row {
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Wind: ${weatherData.windspeed}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Text(text = "Wind: ${uiData.wind}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painter = painterResource(R.drawable.compass), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Wind Direction: ${weatherData.windDirection.display()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Text(text = "Wind Direction: ${uiData.windDirection}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Precipitation: ${weatherData.precipitation}mm", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Text(text = "Precipitation: ${uiData.precipitation}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Sunrise: ${dayNow.sunrise.formatToHHmm()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Text(text = "Sunrise: ${uiData.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Sunset: ${dayNow.sunset.formatToHHmm()}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Text(text = "Sunset: ${uiData.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeatherHourSection(weatherData: WeatherData) {
-    val hourData = weatherData.hourlyData
+fun WeatherHourSection(uiData: List<WeatherHourDataUI>) {
     LazyRow(contentPadding = PaddingValues(16.dp), modifier = Modifier.nestedScroll(CustomNestedScrollConnection())) {
-        items(hourData) {
+        items(uiData) {
             Card(modifier = Modifier
                 .padding(horizontal = 15.dp)
                 .widthIn(max = 50.dp)) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "${it.time.hour}h")
-                    Text(text = "${it.temperature}°C")
-                    Text(text = "${it.precipitation}%")
+                    Text(text = it.hour)
+                    Text(text = it.temperature)
+                    Text(text = it.precipitation)
                     Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloudy")
                 }
             }
@@ -142,11 +137,11 @@ fun WeatherHourSection(weatherData: WeatherData) {
 }
 
 @Composable
-fun WeatherDaySection(weatherData: WeatherData) {
+fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
     Column(modifier= Modifier.fillMaxSize()) {
         val days = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
-        days.forEach {
+        uiData.forEach {
             var expanded by remember { mutableStateOf(false) }
             Card(modifier = Modifier
                 .fillMaxWidth()
@@ -157,8 +152,8 @@ fun WeatherDaySection(weatherData: WeatherData) {
                 Column(modifier = Modifier.animateContentSize()) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
-                        Text(text = it, modifier=Modifier.weight(1f))
-                        Text(text = "12°c / 14°c", textAlign = TextAlign.End)
+                        Text(text = it.day, modifier=Modifier.weight(1f))
+                        Text(text = "${it.minTemperature} / ${it.maxTemperature}", textAlign = TextAlign.End)
                     }
                     if(expanded) {
                         Text(text = "Expanded Content. ".repeat(5))
@@ -185,60 +180,48 @@ fun WeatherDaySection(weatherData: WeatherData) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun fakeWeatherData() : WeatherData {
+fun fakeWeatherData() : WeatherDataUI {
     val location = "Brussels"
-    val latitude = 0.0
-    val longitude = 0.0
-    val elevation = 0L
-    val weatherCode = WeatherCode.CLEAR_SKY
-    val temperature = 100.0
-    val precipitation = 0.0
-    val windspeed = 100.0
-    val windgusts = 100.0
-    val windDirection = WeatherWindDirection.SOUTH
 
+    val now = ZonedDateTime.now()
+    val currentWeatherData = WeatherCurrentDataUI(
+        "39°C",
+        "130 km/h",
+        "260 km/h",
+        "South",
+        "800mm",
+        "12:00",
+        "18:00"
+    )
 
-    val weathercodes = WeatherCode.values().toList()
-    val winddirections = WeatherWindDirection.values().toList()
-
-    val hourlyData = List(24) {
-        val weatherCode = weathercodes.shuffled().first()
-        val windDirection = winddirections.shuffled().first()
-
-        val temp = Random.nextDouble(-10.0, 46.0)
-        val precipitation = Random.nextDouble(0.0, 100.0)
-        val windSpeed = Random.nextDouble(0.0, 130.0)
-        val windGusts = Random.nextDouble(0.0, 150.0)
-
-        WeatherHourData(ZonedDateTime.now().plusHours(it.toLong()), weatherCode, temp,  precipitation, windSpeed, windGusts, windDirection)
+    val hourlyWeatherData = List(24) {
+        val hour = "${now.plusHours(it.toLong()).formatToHHmm()}h"
+        val precipitation = "${Random.nextInt(0, 835)}mm"
+        val temperature = "${Random.nextInt(-15, 46)}°C"
+        val icon = ""
+        WeatherHourDataUI(hour, precipitation, temperature, icon)
     }
 
-    val dailyData = List(7) {
-        val weatherCode = weathercodes.shuffled().first()
-        val windDirection = winddirections.shuffled().first()
-        val minTemp = Random.nextDouble(-10.0, 46.0)
-        val maxTemp = Random.nextDouble(minTemp, 46.0)
-        val precipitation = Random.nextDouble(0.0, 100.0)
-        val windSpeed = Random.nextDouble(0.0, 130.0)
-        val windGusts = Random.nextDouble(0.0, 150.0)
-
-        WeatherDayData(ZonedDateTime.now().plusDays(1), weatherCode, minTemp, maxTemp, ZonedDateTime.now(), ZonedDateTime.now(), precipitation, windSpeed, windGusts, windDirection)
+    val days = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    val dailyWeatherData = List(7) {
+        val _min = Random.nextInt(-15, 46)
+        val minTemperature = "${_min}°C"
+        val maxTemperature = "${Random.nextInt(_min, 46)}°C"
+        val precipitation = "${Random.nextInt(0, 835)}mm"
+        val wind = "km/h"
+        val gusts = "km/h"
+        val direction = "South"
+        val icon = ""
+        WeatherDayDataUI(days[it], minTemperature, maxTemperature, precipitation, wind, gusts, direction, icon)
     }
 
 
-    val weatherData = WeatherData(
+    val weatherData = WeatherDataUI(
+        UUID.randomUUID(),
         location,
-        latitude,
-        longitude,
-        elevation,
-        weatherCode,
-        temperature,
-        precipitation,
-        windspeed,
-        windgusts,
-        windDirection,
-        hourlyData,
-        dailyData
+        currentWeatherData,
+        hourlyWeatherData,
+        dailyWeatherData
     )
 
     return weatherData
@@ -250,5 +233,5 @@ fun WeatherCardPreview() {
 
     val weatherData = fakeWeatherData()
 
-    WeatherCard(weatherData = weatherData)
+    WeatherCard(uiData = weatherData)
 }
