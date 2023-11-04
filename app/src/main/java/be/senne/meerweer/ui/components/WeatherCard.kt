@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,7 @@ import be.senne.meerweer.utils.CustomNestedScrollConnection
 import be.senne.meerweer.utils.formatToHHmm
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @Composable
 fun WeatherCard(weatherData: WeatherData) {
@@ -145,10 +147,25 @@ fun WeatherDaySection(weatherData: WeatherData) {
         val days = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
         days.forEach {
+            var expanded by remember { mutableStateOf(false) }
             Card(modifier = Modifier
                 .fillMaxWidth()
-                .padding(5.dp)) {
-                var expanded by remember { mutableStateOf(false) }
+                .padding(5.dp).clickable {
+                    expanded = !expanded
+                }) {
+
+                Column(modifier = Modifier.animateContentSize()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
+                        Text(text = it, modifier=Modifier.weight(1f))
+                        Text(text = "12°c / 14°c", textAlign = TextAlign.End)
+                    }
+                    if(expanded) {
+                        Text(text = "Expanded Content. ".repeat(5))
+                    }
+                }
+
+/*
                 Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { expanded = !expanded }) {
                         Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
@@ -161,6 +178,7 @@ fun WeatherDaySection(weatherData: WeatherData) {
                         }
                     }
                 }
+ */
             }
         }
     }
@@ -173,47 +191,39 @@ fun fakeWeatherData() : WeatherData {
     val longitude = 0.0
     val elevation = 0L
     val weatherCode = WeatherCode.CLEAR_SKY
-    val temperature = 0.0
+    val temperature = 100.0
     val precipitation = 0.0
     val windspeed = 100.0
     val windgusts = 100.0
     val windDirection = WeatherWindDirection.SOUTH
 
-    val hourlyData = listOf<WeatherHourData>(
-        WeatherHourData(ZonedDateTime.now(), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(1), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(2), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(3), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(4), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(5), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(6), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(7), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(8), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(9), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(10), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(11), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(12), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(13), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(14), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(15), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(16), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(17), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(18), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(19), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(20), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(21), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(22), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-        WeatherHourData(ZonedDateTime.now().plusHours(23), weatherCode, temperature, 50.0, windspeed, windgusts, windDirection),
-    )
-    val dailyData = listOf<WeatherDayData>(
-        WeatherDayData(ZonedDateTime.now(), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(1), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(2), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(3), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(4), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(5), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        WeatherDayData(ZonedDateTime.now().plusDays(6), weatherCode, temperature + 10, temperature + 5, ZonedDateTime.now(), ZonedDateTime.now(), 50.0, windspeed, windgusts, windDirection),
-        )
+
+    val weathercodes = WeatherCode.values().toList()
+    val winddirections = WeatherWindDirection.values().toList()
+
+    val hourlyData = List(24) {
+        val weatherCode = weathercodes.shuffled().first()
+        val windDirection = winddirections.shuffled().first()
+
+        val temp = Random.nextDouble(-10.0, 46.0)
+        val precipitation = Random.nextDouble(0.0, 100.0)
+        val windSpeed = Random.nextDouble(0.0, 130.0)
+        val windGusts = Random.nextDouble(0.0, 150.0)
+
+        WeatherHourData(ZonedDateTime.now().plusHours(it.toLong()), weatherCode, temp,  precipitation, windSpeed, windGusts, windDirection)
+    }
+
+    val dailyData = List(7) {
+        val weatherCode = weathercodes.shuffled().first()
+        val windDirection = winddirections.shuffled().first()
+        val minTemp = Random.nextDouble(-10.0, 46.0)
+        val maxTemp = Random.nextDouble(minTemp, 46.0)
+        val precipitation = Random.nextDouble(0.0, 100.0)
+        val windSpeed = Random.nextDouble(0.0, 130.0)
+        val windGusts = Random.nextDouble(0.0, 150.0)
+
+        WeatherDayData(ZonedDateTime.now().plusDays(1), weatherCode, minTemp, maxTemp, ZonedDateTime.now(), ZonedDateTime.now(), precipitation, windSpeed, windGusts, windDirection)
+    }
 
 
     val weatherData = WeatherData(
