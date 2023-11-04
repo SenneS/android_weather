@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +50,7 @@ import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherDayData
 import be.senne.meerweer.domain.model.WeatherHourData
 import be.senne.meerweer.domain.model.WeatherWindDirection
+import be.senne.meerweer.utils.CustomNestedScrollConnection
 import be.senne.meerweer.utils.formatToHHmm
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
@@ -121,11 +123,11 @@ fun WeatherMainDataSection(weatherData: WeatherData) {
 @Composable
 fun WeatherHourSection(weatherData: WeatherData) {
     val hourData = weatherData.hourlyData
-    LazyRow(
-        contentPadding = PaddingValues(16.dp)
-    ) {
+    LazyRow(contentPadding = PaddingValues(16.dp), modifier = Modifier.nestedScroll(CustomNestedScrollConnection())) {
         items(hourData) {
-            Card(modifier = Modifier.padding(horizontal=15.dp).widthIn(max=50.dp)) {
+            Card(modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .widthIn(max = 50.dp)) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = "${it.time.hour}h")
                     Text(text = "${it.temperature}°C")
