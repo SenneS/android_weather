@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import be.senne.meerweer.ui.nav.NavDestination
 import be.senne.meerweer.ui.nav.NavigationAction
 import be.senne.meerweer.ui.nav.NavigationDestination
+import be.senne.meerweer.ui.screens.search.SearchViewModel
 import be.senne.meerweer.ui.screens.settings.SettingsViewModel
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import be.senne.meerweer.utils.DevicePosture
@@ -186,7 +187,9 @@ fun WeatherAppNavHost(
             Text("HOME")
         }
         composable(NavDestination.Search.route) {
-
+            val viewModel = hiltViewModel<SearchViewModel>()
+            val state = viewModel.state.collectAsStateWithLifecycle()
+            SearchScreen2(state = state, onEvent = viewModel::onEvent)
         }
         composable(NavDestination.Settings.route) {
 

@@ -26,7 +26,7 @@ fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
     val ui = state.value;
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TextField(value = state.value.searchTerm, onValueChange = {newValue -> onEvent(SearchEvent.OnSearchTermValueChange(newValue))}, modifier = Modifier.fillMaxWidth(), placeholder = {Text("")})
+        TextField(value = state.value.searchTerm, onValueChange = {newValue -> onEvent(SearchEvent.SearchTermValueChange(newValue))}, modifier = Modifier.fillMaxWidth(), placeholder = {Text("")})
         Spacer(modifier = Modifier.height(16.dp))
 
         if(ui.isSearching) {

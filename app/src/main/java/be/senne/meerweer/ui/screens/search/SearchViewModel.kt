@@ -29,6 +29,7 @@ class SearchViewModel @Inject constructor(
     private val searchDebounce = MutableSharedFlow<String>()
 
     init {
+        /*
         viewModelScope.launch {
             searchDebounce.debounce(1000).collect {
                 delay(3000)
@@ -46,17 +47,29 @@ class SearchViewModel @Inject constructor(
 
             }
         }
+         */
+    }
+
+    private fun OnSearchTermValueChange(term : String) {
+        viewModelScope.launch {
+            Log.wtf("", "search term: ${term}")
+            //searchDebounce.emit(event.term)
+            _state.value = _state.value.copy(searchTerm = term)
+        }
+    }
+
+    private fun OnSearch(query : String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isSearching = true)
+            delay(1000)
+            _state.value = _state.value.copy(isSearching = false)
+        }
     }
 
     fun onEvent(event: SearchEvent) {
         when(event) {
-            is SearchEvent.OnSearchTermValueChange -> {
-                viewModelScope.launch {
-                    Log.wtf("", "search term: ${event.term}")
-                    searchDebounce.emit(event.term)
-                    _state.value = _state.value.copy(searchTerm = event.term, isSearching = true)
-                }
-            }
+            is SearchEvent.SearchTermValueChange -> OnSearchTermValueChange(event.term)
+            is SearchEvent.Search -> OnSearch(event.query)
         }
     }
 }
