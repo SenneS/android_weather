@@ -145,8 +145,8 @@ fun WeatherApp(
 @Composable
 fun WeatherAppContent(
     navigationType: NavigationType,
-    navigationContent: NavigationContent,
-    navigationAlignment: NavigationAlignment,
+    navContent: NavigationContent,
+    navAlignment: NavigationAlignment,
     navController: NavHostController,
     navAction: (NavigationDestination) -> Unit,
     selectedDestination: String,
@@ -155,7 +155,7 @@ fun WeatherAppContent(
 ) {
     Row(Modifier.fillMaxSize()) {
         AnimatedVisibility(visible = navigationType == NavigationType.NAV_RAIL) {
-            WeatherAppNavigationRail(selectedDestination, navAction, onNavDrawerClick)
+            WeatherAppNavigationRail(selectedDestination, navAlignment, navAction, onNavDrawerClick)
         }
         Column(modifier = Modifier
             .fillMaxSize()
@@ -186,7 +186,7 @@ fun WeatherAppNavHost(
 
         }
         composable(NavDestination.Settings.route) {
-
+            SettingsScreen2()
         }
     }
 }

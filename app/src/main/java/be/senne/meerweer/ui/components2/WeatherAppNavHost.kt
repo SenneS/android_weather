@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,10 +65,10 @@ fun WeatherAppNavigationDrawerContent(
 ) {
     Column(
         modifier = Modifier
-        .wrapContentWidth()
-        .fillMaxHeight()
-        .background(MaterialTheme.colorScheme.inverseOnSurface)
-        .padding(24.dp)) {
+            .wrapContentWidth()
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.inverseOnSurface)
+            .padding(24.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,6 +109,7 @@ fun WeatherAppNavigationDrawerContent(
 @Composable
 fun WeatherAppNavigationRail(
     selectedDestination : String,
+    navAlignment: NavigationAlignment,
     navAction: (NavigationDestination) -> Unit,
     onNavDrawerClick: () -> Unit
 ) {
@@ -119,6 +121,11 @@ fun WeatherAppNavigationRail(
                       },
             icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu") }
         )
+
+        if(navAlignment == NavigationAlignment.CENTER) {
+            Spacer(Modifier.weight(0.75f))
+        }
+
         NavigationDestination.Items().forEach {
             NavigationRailItem(
                 selected = it.route == selectedDestination,
@@ -129,6 +136,10 @@ fun WeatherAppNavigationRail(
                     Icon(imageVector = it.selectedIcon, contentDescription = it.label)
                 }
             )
+        }
+
+        if(navAlignment == NavigationAlignment.CENTER) {
+            Spacer(Modifier.weight(1f))
         }
     }
 }
