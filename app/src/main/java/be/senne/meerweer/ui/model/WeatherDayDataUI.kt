@@ -1,7 +1,5 @@
 package be.senne.meerweer.ui.model
 
-import be.senne.meerweer.domain.model.WeatherWindDirection
-
 data class WeatherDayDataUI(
     val day: String,
     val minTemperature : String,

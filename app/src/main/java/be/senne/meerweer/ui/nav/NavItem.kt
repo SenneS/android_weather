@@ -11,11 +11,18 @@ data class NavItem(
     val icon : ImageVector = Icons.Filled.Home,
     val route : String = ""
 ) {
-    fun getNavigationItems() : List<NavItem> {
-        return listOf(
-            NavItem("Home", icon= Icons.Filled.Home, route = NavDestination.Home.route),
-            NavItem("Search", icon= Icons.Filled.Search, route = NavDestination.Search.route),
-            NavItem("Settings", icon= Icons.Filled.Settings, route = NavDestination.Settings.route),
-        )
+
+    companion object {
+        fun getNavigationItems(): List<NavItem> {
+            return listOf(
+                NavItem("Home", icon = Icons.Filled.Home, route = NavDestination.Home.route),
+                NavItem("Search", icon = Icons.Filled.Search, route = NavDestination.Search.route),
+                NavItem(
+                    "Settings",
+                    icon = Icons.Filled.Settings,
+                    route = NavDestination.Settings.route
+                ),
+            )
+        }
     }
 }
