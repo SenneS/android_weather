@@ -1,18 +1,20 @@
 package be.senne.meerweer.ui.components2
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.senne.meerweer.domain.model.MeasurementUnit
@@ -37,63 +38,77 @@ import be.senne.meerweer.ui.theme.HetWeerTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen2(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit) {
+    val ui = state.value
+
     Scaffold(
         topBar = {
             TopAppBar(title = {
                 Text(
                     text="Settings",
-                    style=MaterialTheme.typography.titleMedium
+                    style=MaterialTheme.typography.titleLarge
                 )
             })
         }) {
-        Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(it)
-            .padding(16.dp)) {
+        if(ui.isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+        }
+        else {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(it)
+                    .padding(16.dp)
+            ) {
 
-            val ui = state.value
 
-            val temp_items = listOf(
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "°C",
-                    MeasurementUnit.METRIC
-                ),
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "°F",
-                    MeasurementUnit.IMPERIAL
+                val temp_items = listOf(
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "°C",
+                        MeasurementUnit.METRIC
+                    ),
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "°F",
+                        MeasurementUnit.IMPERIAL
+                    )
                 )
-            )
-            val wind_items = listOf(
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "kmh",
-                    MeasurementUnit.METRIC
-                ),
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "mph",
-                    MeasurementUnit.IMPERIAL
+                val wind_items = listOf(
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "km/h",
+                        MeasurementUnit.METRIC
+                    ),
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "mph",
+                        MeasurementUnit.IMPERIAL
+                    )
                 )
-            )
-            val precipitation_items = listOf(
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "kmh",
-                    MeasurementUnit.METRIC
-                ),
-                SettingToggleGroupEntry<MeasurementUnit>(
-                    "mph",
-                    MeasurementUnit.IMPERIAL
+                val precipitation_items = listOf(
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "mm",
+                        MeasurementUnit.METRIC
+                    ),
+                    SettingToggleGroupEntry<MeasurementUnit>(
+                        "in",
+                        MeasurementUnit.IMPERIAL
+                    )
                 )
-            )
 
-            SettingGroup("Units of Measurement") {
-                SettingToggle("Setting 1", ui.currentTemperatureUnit, temp_items, {
-                    onEvent(SettingsEvent.SetTemperatureUnit(it))
-                })
-                SettingToggle("Setting 2", ui.currentSpeedUnit, wind_items, {
-                    onEvent(SettingsEvent.SetTemperatureUnit(it))
-                })
-                SettingToggle("Setting 3", ui.currentPrecipitationUnit, precipitation_items, {
-                    onEvent(SettingsEvent.SetTemperatureUnit(it))
-                })
+                SettingGroup("Units of Measurement") {
+                    SettingToggle("Temperature Unit", ui.currentTemperatureUnit, temp_items, {
+                        onEvent(SettingsEvent.SetTemperatureUnit(it))
+                    })
+                    SettingToggle("Speed Unit", ui.currentSpeedUnit, wind_items, {
+                        onEvent(SettingsEvent.SetSpeedUnit(it))
+                    })
+                    SettingToggle(
+                        "Precipitation Unit",
+                        ui.currentPrecipitationUnit,
+                        precipitation_items,
+                        {
+                            onEvent(SettingsEvent.SetPrecipitationUnit(it))
+                        })
+                }
             }
         }
     }
@@ -102,7 +117,7 @@ fun SettingsScreen2(state: State<SettingsState>, onEvent: (SettingsEvent) -> Uni
 @Composable
 fun SettingGroup(name: String, content: @Composable () -> Unit) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(text = name)
+        Text(text = name, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Surface(
             color = MaterialTheme.colorScheme.primaryContainer,
@@ -125,10 +140,10 @@ fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingTog
     Surface {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = name, )
+                Text(text = name)
                 Spacer(modifier = Modifier.weight(1f))
 
-                Row {
+                Row(modifier = Modifier.width(200.dp)) {
                     items.forEachIndexed { i, it ->
                         val selected = selectedIndex == i
                         val topStartP : Int
@@ -165,7 +180,7 @@ fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingTog
                             }
                         }
 
-                        OutlinedButton(
+                        OutlinedButton(modifier = Modifier.weight(1f),
                             onClick = {
                                 onToggle(it.value)
                             },
@@ -182,7 +197,6 @@ fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingTog
     }
 }
 
-
 @Preview
 @Composable
 fun GroupButton() {
@@ -190,7 +204,7 @@ fun GroupButton() {
     val state = 0
     val items = listOf(
         SettingToggleGroupEntry<Int>(
-            "kmh",
+            "km/h",
             0
         ),
         SettingToggleGroupEntry<Int>(
