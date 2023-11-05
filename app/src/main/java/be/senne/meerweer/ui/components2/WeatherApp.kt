@@ -114,18 +114,18 @@ fun WeatherApp(
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
-                    WeatherAppNavigationDrawerContent(selectedDestination, navType, navAction::navigateTo, {
+                    WeatherAppNavigationDrawerContent(selectedDestination, navType, navAction::navigateTo) {
                         scope.launch {
-                            drawerState.open()
+                            drawerState.close()
                         }
-                    })
+                    }
                 }
                             },
             drawerState = drawerState
         ) {
             WeatherAppContent(navType, navContent, navAlignment, navController, navAction::navigateTo, selectedDestination, {
                 scope.launch {
-                    drawerState.close()
+                    drawerState.open()
                 }
             })
         }
@@ -150,12 +150,12 @@ fun WeatherAppContent(
     navController: NavHostController,
     navAction: (NavigationDestination) -> Unit,
     selectedDestination: String,
-    onNavDrawerOpen: () -> Unit = {},
+    onNavDrawerClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(Modifier.fillMaxSize()) {
         AnimatedVisibility(visible = navigationType == NavigationType.NAV_RAIL) {
-            WeatherAppNavigationRail(selectedDestination, navAction, onNavDrawerOpen)
+            WeatherAppNavigationRail(selectedDestination, navAction, onNavDrawerClick)
         }
         Column(modifier = Modifier
             .fillMaxSize()

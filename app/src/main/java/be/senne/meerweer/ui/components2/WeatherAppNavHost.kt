@@ -82,7 +82,9 @@ fun WeatherAppNavigationDrawerContent(
             )
 
             if(navType != NavigationType.NAV_DRAWER) {
-                IconButton(onClick = { onNavDrawerClick() }) {
+                IconButton(onClick = {
+                    onNavDrawerClick()
+                }) {
                     Icon(imageVector = Icons.Default.MenuOpen, contentDescription = "")
                 }
             }
@@ -112,7 +114,9 @@ fun WeatherAppNavigationRail(
     NavigationRail(modifier = Modifier.fillMaxHeight()) {
         NavigationRailItem(
             selected = false,
-            onClick = { onNavDrawerClick() },
+            onClick = {
+                onNavDrawerClick()
+                      },
             icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu") }
         )
         NavigationDestination.Items().forEach {
@@ -124,20 +128,6 @@ fun WeatherAppNavigationRail(
                 icon = {
                     Icon(imageVector = it.selectedIcon, contentDescription = it.label)
                 }
-            )
-        }
-    }
-}
-
-@Composable
-fun WeatherAppPermanentNavigationDrawerContent() {
-    PermanentDrawerSheet {
-        NavItem.getNavigationItems().forEach {
-
-            NavigationDrawerItem(
-                label = { Text(it.label) },
-                selected = false,
-                onClick = { /*TODO*/ }
             )
         }
     }
