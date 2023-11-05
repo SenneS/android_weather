@@ -60,9 +60,9 @@ fun SettingsScreen2() {
             )
 
             SettingGroup("Units of Measurement") {
-                SettingToggle("Setting 1", state, items)
-                SettingToggle("Setting 2", state, items)
-                SettingToggle("Setting 3", state, items)
+                SettingToggle("Setting 1", state, items, {})
+                SettingToggle("Setting 2", state, items, {})
+                SettingToggle("Setting 3", state, items, {})
             }
         }
     }
@@ -93,12 +93,8 @@ data class SettingToggleGroupEntry<T>(
     val name : String,
     val value: T
 )
-
-data class ToggleData<T>(
-    val onToggle: (T) -> Unit
-)
 @Composable
-fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : List<SettingToggleGroupEntry<T>>) {
+fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : List<SettingToggleGroupEntry<T>>, onToggle: (T) -> Unit) {
     Surface {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -143,7 +139,9 @@ fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : Lis
                         }
 
                         OutlinedButton(
-                            onClick = {},
+                            onClick = {
+                                onToggle(it.value)
+                            },
                             shape = RoundedCornerShape(topStartPercent = topStartP, topEndPercent = topEndP, bottomEndPercent = bottomEndP, bottomStartPercent = bottomStartP),
                             colors = buttonColors
                         ) {
@@ -175,6 +173,6 @@ fun GroupButton() {
     )
 
     HetWeerTheme {
-        SettingToggle("Setting 1", state, items)
+        SettingToggle("Setting 1", state, items, {})
     }
 }
