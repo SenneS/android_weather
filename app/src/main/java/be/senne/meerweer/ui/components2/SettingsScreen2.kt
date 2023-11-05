@@ -22,17 +22,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import be.senne.meerweer.domain.model.MeasurementUnit
+import be.senne.meerweer.ui.screens.settings.SettingsEvent
+import be.senne.meerweer.ui.screens.settings.SettingsState
 import be.senne.meerweer.ui.theme.HetWeerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen2() {
+fun SettingsScreen2(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(title = {
@@ -47,22 +51,49 @@ fun SettingsScreen2() {
             .padding(it)
             .padding(16.dp)) {
 
-            val state = SettingToggleGroupState(0)
-            val items = listOf(
-                SettingToggleGroupEntry<Int>(
-                    "kmh",
-                    0
+            val ui = state.value
+
+            val temp_items = listOf(
+                SettingToggleGroupEntry<MeasurementUnit>(
+                    "°C",
+                    MeasurementUnit.METRIC
                 ),
-                SettingToggleGroupEntry<Int>(
+                SettingToggleGroupEntry<MeasurementUnit>(
+                    "°F",
+                    MeasurementUnit.IMPERIAL
+                )
+            )
+            val wind_items = listOf(
+                SettingToggleGroupEntry<MeasurementUnit>(
+                    "kmh",
+                    MeasurementUnit.METRIC
+                ),
+                SettingToggleGroupEntry<MeasurementUnit>(
                     "mph",
-                    1
+                    MeasurementUnit.IMPERIAL
+                )
+            )
+            val precipitation_items = listOf(
+                SettingToggleGroupEntry<MeasurementUnit>(
+                    "kmh",
+                    MeasurementUnit.METRIC
+                ),
+                SettingToggleGroupEntry<MeasurementUnit>(
+                    "mph",
+                    MeasurementUnit.IMPERIAL
                 )
             )
 
             SettingGroup("Units of Measurement") {
-                SettingToggle("Setting 1", state, items, {})
-                SettingToggle("Setting 2", state, items, {})
-                SettingToggle("Setting 3", state, items, {})
+                SettingToggle("Setting 1", ui.currentTemperatureUnit, temp_items, {
+                    onEvent(SettingsEvent.SetTemperatureUnit(it))
+                })
+                SettingToggle("Setting 2", ui.currentSpeedUnit, wind_items, {
+                    onEvent(SettingsEvent.SetTemperatureUnit(it))
+                })
+                SettingToggle("Setting 3", ui.currentPrecipitationUnit, precipitation_items, {
+                    onEvent(SettingsEvent.SetTemperatureUnit(it))
+                })
             }
         }
     }
@@ -85,16 +116,12 @@ fun SettingGroup(name: String, content: @Composable () -> Unit) {
     }
 }
 
-
-data class SettingToggleGroupState(
-    val currentIndex : Int
-)
 data class SettingToggleGroupEntry<T>(
     val name : String,
     val value: T
 )
 @Composable
-fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : List<SettingToggleGroupEntry<T>>, onToggle: (T) -> Unit) {
+fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingToggleGroupEntry<T>>, onToggle: (T) -> Unit) {
     Surface {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -103,7 +130,7 @@ fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : Lis
 
                 Row {
                     items.forEachIndexed { i, it ->
-                        val selected = state.currentIndex == i
+                        val selected = selectedIndex == i
                         val topStartP : Int
                         val topEndP : Int
                         val bottomEndP : Int
@@ -160,7 +187,7 @@ fun <T> SettingToggle(name: String, state : SettingToggleGroupState, items : Lis
 @Composable
 fun GroupButton() {
 
-    val state = SettingToggleGroupState(0)
+    val state = 0
     val items = listOf(
         SettingToggleGroupEntry<Int>(
             "kmh",

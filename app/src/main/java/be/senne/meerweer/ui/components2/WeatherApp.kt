@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import be.senne.meerweer.ui.nav.NavDestination
 import be.senne.meerweer.ui.nav.NavigationAction
 import be.senne.meerweer.ui.nav.NavigationDestination
+import be.senne.meerweer.ui.screens.settings.SettingsViewModel
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import be.senne.meerweer.utils.DevicePosture
 import kotlinx.coroutines.launch
@@ -186,7 +189,10 @@ fun WeatherAppNavHost(
 
         }
         composable(NavDestination.Settings.route) {
-            SettingsScreen2()
+
+            val viewModel = hiltViewModel<SettingsViewModel>()
+            val state = viewModel.state.collectAsStateWithLifecycle()
+            SettingsScreen2(state = state, onEvent = viewModel::onEvent)
         }
     }
 }
