@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -82,11 +83,14 @@ fun WeatherCard(uiData: WeatherDataUI) {
 fun WeatherHeaderSection(uiData: WeatherDataUI) {
     Box(modifier = Modifier.scale(1f)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(80.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(120.dp))
+            Spacer(modifier = Modifier.weight(1f))
             Column {
                 Text(text = uiData.location)
                 Text(text = "${uiData.now.temperature}°C")
             }
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -125,7 +129,7 @@ fun WeatherHourSection(uiData: List<WeatherHourDataUI>) {
         items(uiData) {
             Card(modifier = Modifier
                 .padding(horizontal = 15.dp)
-                .widthIn(max = 50.dp)) {
+                .size(width = 150.dp, height = 100.dp)) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = it.hour)
                     Text(text = it.temperature)
@@ -145,7 +149,7 @@ fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
         uiData.forEach {
             var expanded by remember { mutableStateOf(false) }
             Card(modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth().heightIn(50.dp)
                 .padding(5.dp).clickable {
                     expanded = !expanded
                 }) {
@@ -197,7 +201,7 @@ fun fakeWeatherData() : WeatherDataUI {
 
     val hourlyWeatherData = List(24) {
         val hour = "${now.plusHours(it.toLong()).formatToHHmm()}h"
-        val precipitation = "${Random.nextInt(0, 835)}mm"
+        val precipitation = "${Random.nextInt(0, 100)}%"
         val temperature = "${Random.nextInt(-15, 46)}°C"
         val icon = ""
         WeatherHourDataUI(hour, precipitation, temperature, icon)

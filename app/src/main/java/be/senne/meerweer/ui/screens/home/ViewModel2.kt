@@ -80,12 +80,13 @@ class ViewModel2 @Inject constructor(
             )
         }
 
+
         CoroutineScope(Dispatchers.IO).launch {
             delay(3000)
             Log.wtf("", "H2")
             val locationMap = _state.value.locationData.toMutableMap()
             locationMap[4] = fakeWeatherData()
-            _state.update { it.copy(locationData = locationMap) }
+            _state.update { it.copy(locationData = locationMap, locationLoading = false) }
         }
 
         Log.wtf("", "H1")
