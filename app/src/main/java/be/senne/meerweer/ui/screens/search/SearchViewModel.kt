@@ -70,6 +70,7 @@ class SearchViewModel @Inject constructor(
         when(event) {
             is SearchEvent.SearchTermValueChange -> OnSearchTermValueChange(event.term)
             is SearchEvent.Search -> OnSearch(event.query)
+            is SearchEvent.SaveLocation -> TODO()
         }
     }
 }

@@ -7,4 +7,5 @@ import androidx.room.PrimaryKey
 data class WeatherDataEntity(
     @PrimaryKey
     val id : Long,
+    var timestamp : Long
 )

@@ -9,5 +9,5 @@ interface WeatherService {
     }
 
     @GET("$BASE_URL/forecast")
-    suspend fun getForecast() : ForecastResponse
+    suspend fun getForecast(latitude : Double, longitude: Double) : ForecastResponse
 }
