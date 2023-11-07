@@ -37,7 +37,7 @@ import be.senne.meerweer.ui.theme.HetWeerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen2(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit) {
+fun SettingsScreen(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit) {
     val ui = state.value
 
     Scaffold(

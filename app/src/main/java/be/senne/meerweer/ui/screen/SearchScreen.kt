@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen2(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
+fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
     val ui = state.value
     SearchBar(
         query = ui.searchTerm,
@@ -76,6 +76,6 @@ fun SearchScreen2Preview() {
         val __state = MutableStateFlow(SearchState())
         val _state = __state.asStateFlow()
         val state = _state.collectAsStateWithLifecycle()
-        SearchScreen2(state, {})
+        SearchScreen(state, {})
     }
 }

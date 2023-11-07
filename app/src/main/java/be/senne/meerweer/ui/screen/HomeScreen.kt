@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen2(state : State<State2>, onEvent: (Event2) -> Unit) {
+fun HomeScreen(state : State<State2>, onEvent: (Event2) -> Unit) {
     val ui = state.value
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -63,12 +63,22 @@ fun HomeScreen2(state : State<State2>, onEvent: (Event2) -> Unit) {
                 }
 
                 /*
-            Card {
-                ui.locationData[it]?.let {
-                    Text("Item ${it.location}")
-
-                } ?: kotlin.run {
-                    CircularProgressIndicator()
+Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 8.dp), horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(pagerState.pageCount) {
+                    val color = if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(16.dp)
+                    )
                 }
             }
 
@@ -97,5 +107,5 @@ fun HomeScreen2Prev() {
     val _state = __state.asStateFlow()
     val state = _state.collectAsStateWithLifecycle()
 
-    HomeScreen2(state, {})
+    HomeScreen(state, {})
 }

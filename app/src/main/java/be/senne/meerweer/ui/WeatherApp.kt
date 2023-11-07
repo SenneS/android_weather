@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.component
+package be.senne.meerweer.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -31,12 +31,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import be.senne.meerweer.ui.component.WeatherAppBottomNavigation
+import be.senne.meerweer.ui.component.WeatherAppNavigationDrawerContent
+import be.senne.meerweer.ui.component.WeatherAppNavigationRail
 import be.senne.meerweer.ui.nav.NavDestination
 import be.senne.meerweer.ui.nav.NavigationAction
 import be.senne.meerweer.ui.nav.NavigationDestination
-import be.senne.meerweer.ui.screen.HomeScreen2
-import be.senne.meerweer.ui.screen.SearchScreen2
-import be.senne.meerweer.ui.screen.SettingsScreen2
+import be.senne.meerweer.ui.screen.HomeScreen
+import be.senne.meerweer.ui.screen.SearchScreen
+import be.senne.meerweer.ui.screen.SettingsScreen
 import be.senne.meerweer.ui.viewmodel.ViewModel2
 import be.senne.meerweer.ui.viewmodel.SearchViewModel
 import be.senne.meerweer.ui.viewmodel.SettingsViewModel
@@ -189,18 +192,18 @@ fun WeatherAppNavHost(
         composable(NavDestination.Home.route) {
             val viewModel = hiltViewModel<ViewModel2>()
             val state = viewModel.state.collectAsStateWithLifecycle()
-            HomeScreen2(state = state, onEvent = viewModel::onEvent)
+            HomeScreen(state = state, onEvent = viewModel::onEvent)
         }
         composable(NavDestination.Search.route) {
             val viewModel = hiltViewModel<SearchViewModel>()
             val state = viewModel.state.collectAsStateWithLifecycle()
-            SearchScreen2(state = state, onEvent = viewModel::onEvent)
+            SearchScreen(state = state, onEvent = viewModel::onEvent)
         }
         composable(NavDestination.Settings.route) {
 
             val viewModel = hiltViewModel<SettingsViewModel>()
             val state = viewModel.state.collectAsStateWithLifecycle()
-            SettingsScreen2(state = state, onEvent = viewModel::onEvent)
+            SettingsScreen(state = state, onEvent = viewModel::onEvent)
         }
     }
 }
