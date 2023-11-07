@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components2
+package be.senne.meerweer.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import be.senne.meerweer.ui.screens.search.SearchEvent
+import be.senne.meerweer.ui.component.SearchResult
+import be.senne.meerweer.ui.event.SearchEvent
 import be.senne.meerweer.ui.state.SearchState
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import kotlinx.coroutines.flow.MutableStateFlow

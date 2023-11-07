@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components
+package be.senne.meerweer.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -37,9 +37,9 @@ import be.senne.meerweer.ui.nav.NavigationDestination
 import be.senne.meerweer.ui.screen.HomeScreen2
 import be.senne.meerweer.ui.screen.SearchScreen2
 import be.senne.meerweer.ui.screen.SettingsScreen2
-import be.senne.meerweer.ui.screens.home.ViewModel2
-import be.senne.meerweer.ui.screens.search.SearchViewModel
-import be.senne.meerweer.ui.screens.settings.SettingsViewModel
+import be.senne.meerweer.ui.viewmodel.ViewModel2
+import be.senne.meerweer.ui.viewmodel.SearchViewModel
+import be.senne.meerweer.ui.viewmodel.SettingsViewModel
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import be.senne.meerweer.utils.DevicePosture
 import kotlinx.coroutines.launch

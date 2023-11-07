@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.settings
+package be.senne.meerweer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

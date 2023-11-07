@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components2
+package be.senne.meerweer.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -15,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import be.senne.meerweer.ui.components.WeatherCard
-import be.senne.meerweer.ui.components.fakeWeatherData
-import be.senne.meerweer.ui.screens.home.Event2
+import be.senne.meerweer.ui.component.WeatherCard
+import be.senne.meerweer.ui.component.fakeWeatherData
+import be.senne.meerweer.ui.event.Event2
 import be.senne.meerweer.ui.state.State2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

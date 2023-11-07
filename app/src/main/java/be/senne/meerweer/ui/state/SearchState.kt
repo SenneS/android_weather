@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.search
+package be.senne.meerweer.ui.state
 
 import be.senne.meerweer.domain.model.WeatherLocation
 

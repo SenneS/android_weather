@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.home
+package be.senne.meerweer.ui.state
 
 import be.senne.meerweer.ui.model.WeatherDataUI
 

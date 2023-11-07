@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components
+package be.senne.meerweer.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize

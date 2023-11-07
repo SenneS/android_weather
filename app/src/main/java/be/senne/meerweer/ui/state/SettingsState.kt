@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.settings
+package be.senne.meerweer.ui.state
 
 data class SettingsState(
     val isLoading : Boolean = true,

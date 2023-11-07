@@ -7,19 +7,14 @@ import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.PreferencesRepository
 import be.senne.meerweer.domain.repository.WeatherRepository
-import be.senne.meerweer.ui.components.fakeWeatherData
-import be.senne.meerweer.ui.model.WeatherDataUI
+import be.senne.meerweer.ui.component.fakeWeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

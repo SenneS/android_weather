@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components
+package be.senne.meerweer.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
