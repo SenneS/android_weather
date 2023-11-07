@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.settings
+package be.senne.meerweer.ui.event
 
 import be.senne.meerweer.domain.model.MeasurementUnit
 

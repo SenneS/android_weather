@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.home
+package be.senne.meerweer.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,8 +7,10 @@ import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.PreferencesRepository
 import be.senne.meerweer.domain.repository.WeatherRepository
-import be.senne.meerweer.ui.components.fakeWeatherData
+import be.senne.meerweer.ui.component.fakeWeatherData
+import be.senne.meerweer.ui.event.Event2
 import be.senne.meerweer.ui.model.WeatherDataUI
+import be.senne.meerweer.ui.state.State2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

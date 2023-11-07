@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components2
+package be.senne.meerweer.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -11,7 +11,6 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
@@ -35,6 +34,9 @@ import androidx.navigation.compose.rememberNavController
 import be.senne.meerweer.ui.nav.NavDestination
 import be.senne.meerweer.ui.nav.NavigationAction
 import be.senne.meerweer.ui.nav.NavigationDestination
+import be.senne.meerweer.ui.screen.HomeScreen2
+import be.senne.meerweer.ui.screen.SearchScreen2
+import be.senne.meerweer.ui.screen.SettingsScreen2
 import be.senne.meerweer.ui.screens.home.ViewModel2
 import be.senne.meerweer.ui.screens.search.SearchViewModel
 import be.senne.meerweer.ui.screens.settings.SettingsViewModel

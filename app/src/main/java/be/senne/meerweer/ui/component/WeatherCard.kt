@@ -84,11 +84,19 @@ fun WeatherHeaderSection(uiData: WeatherDataUI) {
     Box(modifier = Modifier.scale(1f)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.weight(1f))
-            Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(120.dp))
+            Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(120.dp), tint = MaterialTheme.colorScheme.onSurface)
             Spacer(modifier = Modifier.weight(1f))
             Column {
-                Text(text = uiData.location)
-                Text(text = "${uiData.now.temperature}°C")
+                Text(
+                    text = uiData.location,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "${uiData.now.temperature}°C",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleSmall
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
         }
@@ -100,24 +108,30 @@ fun WeatherMainDataSection(uiData: WeatherCurrentDataUI) {
 
     Row {
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Wind: ${uiData.wind}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(
+                text = "Wind: ${uiData.wind}",
+                modifier = Modifier.padding(top= 10.dp),
+                style=MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.compass), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Wind Direction: ${uiData.windDirection}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Icon(painter = painterResource(R.drawable.compass), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "Wind Direction: ${uiData.windDirection}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Precipitation: ${uiData.precipitation}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "Precipitation: ${uiData.precipitation}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Sunrise: ${uiData.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "Sunrise: ${uiData.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = "", modifier=Modifier.size(48.dp))
-            Text(text = "Sunset: ${uiData.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "Sunset: ${uiData.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -150,7 +164,7 @@ fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
             var expanded by remember { mutableStateOf(false) }
             Card(modifier = Modifier
                 .fillMaxWidth().heightIn(50.dp)
-                .padding(5.dp).clickable {
+                .padding(vertical = 5.dp, horizontal = 10.dp).clickable {
                     expanded = !expanded
                 }) {
 
@@ -158,7 +172,7 @@ fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
                         Text(text = it.day, modifier=Modifier.weight(1f))
-                        Text(text = "${it.minTemperature} / ${it.maxTemperature}", textAlign = TextAlign.End)
+                        Text(text = "${it.minTemperature} / ${it.maxTemperature}", textAlign = TextAlign.End, modifier = Modifier.padding(horizontal=5.dp))
                     }
                     if(expanded) {
                         Text(text = "Expanded Content. ".repeat(5))

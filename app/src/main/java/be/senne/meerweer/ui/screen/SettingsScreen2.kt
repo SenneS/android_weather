@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.components2
+package be.senne.meerweer.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.senne.meerweer.domain.model.MeasurementUnit
 import be.senne.meerweer.ui.screens.settings.SettingsEvent
-import be.senne.meerweer.ui.screens.settings.SettingsState
+import be.senne.meerweer.ui.state.SettingsState
 import be.senne.meerweer.ui.theme.HetWeerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

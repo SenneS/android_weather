@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.senne.meerweer.domain.model.MeasurementUnit
 import be.senne.meerweer.domain.repository.PreferencesRepository
+import be.senne.meerweer.ui.event.SettingsEvent
+import be.senne.meerweer.ui.state.SettingsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

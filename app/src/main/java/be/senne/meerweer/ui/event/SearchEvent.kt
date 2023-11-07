@@ -1,4 +1,4 @@
-package be.senne.meerweer.ui.screens.search
+package be.senne.meerweer.ui.event
 
 sealed class SearchEvent {
     data class SearchTermValueChange(val term : String) : SearchEvent()

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import be.senne.meerweer.ui.screens.search.SearchEvent
-import be.senne.meerweer.ui.screens.search.SearchState
+import be.senne.meerweer.ui.state.SearchState
 import be.senne.meerweer.ui.theme.HetWeerTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

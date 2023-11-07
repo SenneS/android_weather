@@ -3,12 +3,9 @@ package be.senne.meerweer.ui.components2
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.material3.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
@@ -21,8 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import be.senne.meerweer.ui.components.WeatherCard
 import be.senne.meerweer.ui.components.fakeWeatherData
 import be.senne.meerweer.ui.screens.home.Event2
-import be.senne.meerweer.ui.screens.home.HomeEvent
-import be.senne.meerweer.ui.screens.home.State2
+import be.senne.meerweer.ui.state.State2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
