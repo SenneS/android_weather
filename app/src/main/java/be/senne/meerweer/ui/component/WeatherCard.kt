@@ -1,7 +1,5 @@
 package be.senne.meerweer.ui.component
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -125,7 +123,6 @@ fun WeatherMainDataSection(uiData: WeatherCurrentDataUI) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherHourSection(uiData: List<WeatherHourDataUI>) {
     LazyRow(contentPadding = PaddingValues(16.dp), modifier = Modifier.nestedScroll(CustomNestedScrollConnection())) {
@@ -187,7 +184,6 @@ fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun fakeWeatherData() : WeatherDataUI {
     val location = "Brussels"
 

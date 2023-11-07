@@ -17,14 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import be.senne.meerweer.ui.component.WeatherCard
 import be.senne.meerweer.ui.component.fakeWeatherData
-import be.senne.meerweer.ui.event.Event2
-import be.senne.meerweer.ui.state.State2
+import be.senne.meerweer.ui.event.HomeEvent
+import be.senne.meerweer.ui.state.HomeState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(state : State<State2>, onEvent: (Event2) -> Unit) {
+fun HomeScreen(state : State<HomeState>, onEvent: (HomeEvent) -> Unit) {
     val ui = state.value
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -91,7 +91,7 @@ Row(
 @Preview
 @Composable
 fun HomeScreen2Prev() {
-    val uiData = State2(
+    val uiData = HomeState(
         locationsLoading = false,
         locationCount = 5,
         locationData = mapOf(

@@ -8,9 +8,9 @@ import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.PreferencesRepository
 import be.senne.meerweer.domain.repository.WeatherRepository
 import be.senne.meerweer.ui.component.fakeWeatherData
-import be.senne.meerweer.ui.event.Event2
+import be.senne.meerweer.ui.event.HomeEvent
 import be.senne.meerweer.ui.model.WeatherDataUI
-import be.senne.meerweer.ui.state.State2
+import be.senne.meerweer.ui.state.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,13 +24,13 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class ViewModel2 @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(State2())
-    val state: StateFlow<State2> = _state.asStateFlow()
+    private val _state = MutableStateFlow(HomeState())
+    val state: StateFlow<HomeState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -94,10 +94,10 @@ class ViewModel2 @Inject constructor(
         Log.wtf("", "H1")
     }
 
-    fun onEvent(event : Event2) {
+    fun onEvent(event : HomeEvent) {
         viewModelScope.launch {
             when (event) {
-                is Event2.RefreshAllWeatherData -> {
+                is HomeEvent.RefreshAllWeatherData -> {
                     updateWeatherInfo()
                 }
             }

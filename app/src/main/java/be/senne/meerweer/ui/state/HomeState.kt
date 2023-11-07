@@ -2,7 +2,7 @@ package be.senne.meerweer.ui.state
 
 import be.senne.meerweer.ui.model.WeatherDataUI
 
-data class State2(
+data class HomeState(
     val locationsLoading : Boolean = true,
     val locationLoading : Boolean = true,
     val locationCount : Int = 0,
