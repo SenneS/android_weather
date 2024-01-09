@@ -29,10 +29,12 @@ import be.senne.meerweer.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchResult() {
+fun SearchResult(
+    onOpenSearchResult: () -> Unit
+) {
     Card(
         onClick = {
-
+                  onOpenSearchResult()
         },
         modifier = Modifier.padding(16.dp)
     ) {
@@ -78,5 +80,5 @@ fun SearchResultExpanded() {
 @Preview
 @Composable
 fun SearchResultPreview() {
-    SearchResult()
+    SearchResult({})
 }

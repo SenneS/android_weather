@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Het Weer</string>
+    <string name="nav_home_label">Home</string>
+    <string name="nav_home_description">Home Navigation</string>
+    <string name="nav_search_label">Search</string>
+    <string name="nav_search_description">Search Navigation</string>
+    <string name="nav_settings_label">Settings</string>
+    <string name="nav_settings_description">Settings Navigation</string>
+    <string name="nav_menu_btn_description">Menu Button</string>
 </resources>

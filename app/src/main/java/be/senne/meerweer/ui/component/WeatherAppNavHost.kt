@@ -26,7 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import be.senne.meerweer.R
 import be.senne.meerweer.ui.NavigationAlignment
 import be.senne.meerweer.ui.NavigationType
 import be.senne.meerweer.ui.nav.NavigationDestination
@@ -46,11 +48,11 @@ fun WeatherAppBottomNavigation(
                 icon = {
                     Icon(
                         imageVector = it.selectedIcon,
-                        contentDescription = it.label
+                        contentDescription = stringResource(it.contentDescription)
                     )
                        },
                 label = {
-                    Text(it.label)
+                    Text(stringResource(it.label))
                 })
         }
     }
@@ -85,18 +87,18 @@ fun WeatherAppNavigationDrawerContent(
                 IconButton(onClick = {
                     onNavDrawerClick()
                 }) {
-                    Icon(imageVector = Icons.Default.MenuOpen, contentDescription = "")
+                    Icon(imageVector = Icons.Default.MenuOpen, contentDescription = stringResource(R.string.nav_menu_btn_description))
                 }
             }
         }
 
         NavigationDestination.Items().forEach {
             NavigationDrawerItem(
-                label = { Text(text = it.label, modifier=Modifier.padding(horizontal = 16.dp)) },
+                label = { Text(text = stringResource(it.label), modifier=Modifier.padding(horizontal = 16.dp)) },
                 selected = it.route == selectedDestination,
                 onClick = { navAction(it) },
                 icon = {
-                    Icon(imageVector = it.selectedIcon, contentDescription = it.label)
+                    Icon(imageVector = it.selectedIcon, contentDescription = stringResource(it.contentDescription))
                 },
                 colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent)
             )
@@ -118,7 +120,7 @@ fun WeatherAppNavigationRail(
             onClick = {
                 onNavDrawerClick()
                       },
-            icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu") }
+            icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu_btn_description)) }
         )
 
         if(navAlignment == NavigationAlignment.CENTER) {
@@ -132,7 +134,7 @@ fun WeatherAppNavigationRail(
                     navAction(it)
                 },
                 icon = {
-                    Icon(imageVector = it.selectedIcon, contentDescription = it.label)
+                    Icon(imageVector = it.selectedIcon, contentDescription = stringResource(it.contentDescription))
                 }
             )
         }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.senne.meerweer.domain.repository.WeatherRepository
+import be.senne.meerweer.ui.component.fakeWeatherData
 import be.senne.meerweer.ui.event.SearchEvent
 import be.senne.meerweer.ui.state.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,11 +65,27 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun OnOpenSearchResult() {
+        _state.update {
+            it.copy(isDialog = true, searchResultData = Result.success(fakeWeatherData()))
+        }
+    }
+
+    private fun OnCloseSearchResult() {
+        _state.update {
+            it.copy(isDialog = false)
+        }
+    }
+
     fun onEvent(event: SearchEvent) {
-        when(event) {
-            is SearchEvent.SearchTermValueChange -> OnSearchTermValueChange(event.term)
-            is SearchEvent.Search -> OnSearch(event.query)
-            is SearchEvent.SaveLocation -> TODO()
+        viewModelScope.launch {
+            when(event) {
+                is SearchEvent.SearchTermValueChange -> OnSearchTermValueChange(event.term)
+                is SearchEvent.Search -> OnSearch(event.query)
+                is SearchEvent.SaveLocation -> TODO()
+                is SearchEvent.OpenSearchResult -> OnOpenSearchResult()
+                is SearchEvent.CloseSearchResult -> OnCloseSearchResult()
+            }
         }
     }
 }

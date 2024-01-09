@@ -1,11 +1,20 @@
 package be.senne.meerweer.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.pullrefresh.pullRefresh
 import androidx.compose.material3.pullrefresh.rememberPullRefreshState
@@ -13,7 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import be.senne.meerweer.ui.component.WeatherCard
 import be.senne.meerweer.ui.component.fakeWeatherData
@@ -60,18 +71,18 @@ fun HomeScreen(state : State<HomeState>, onEvent: (HomeEvent) -> Unit) {
                         state = pullRefreshState,
                         modifier = Modifier.align(Alignment.Center)
                     )
-                }
 
-                /*
-Row(
-                Modifier
+                }
+            }
+            Row(
+                modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp), horizontalArrangement = Arrangement.Center
-            ) {
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.Center) {
                 repeat(pagerState.pageCount) {
-                    val color = if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
+                    val color = if (pagerState.currentPage == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
@@ -80,9 +91,6 @@ Row(
                             .size(16.dp)
                     )
                 }
-            }
-
- */
             }
         }
     }
