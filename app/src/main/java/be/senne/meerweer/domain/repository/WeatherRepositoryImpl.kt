@@ -8,6 +8,7 @@ import be.senne.meerweer.data.remote.GeocodingService
 import be.senne.meerweer.data.remote.WeatherService
 import be.senne.meerweer.data.remote.dto.ForecastResponse
 import be.senne.meerweer.data.remote.dto.GeocodingGetResponse
+import be.senne.meerweer.domain.model.CountryCode
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import kotlinx.coroutines.delay
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.random.Random
 
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherService: WeatherService,
@@ -22,32 +24,26 @@ class WeatherRepositoryImpl @Inject constructor(
     private val weatherDao: WeatherDao
 ) : WeatherRepository {
 
-    init {
-        Log.wtf("", "WeatherRepository, $weatherService, $geocodingService, $weatherDao")
-    }
-
     override suspend fun searchLocations(name: String): Result<List<WeatherLocation>> {
         val searchResponse = geocodingService.searchLocation(name)
         if(searchResponse.results == null || searchResponse.error != null) {
             return Result.failure(IOException("API Failure"))
         }
         return Result.success(searchResponse.results.map {
-            WeatherLocation(UUID.randomUUID(), it.name, it.latitude, it.longitude, it.elevation)
+            WeatherLocation.mapRemoteToDomain(it);
         })
     }
 
     override suspend fun getSavedLocations(): List<WeatherLocation> {
-        delay(1000)
-        return listOf(
-            WeatherLocation(UUID.randomUUID(),"Location 1", 0.0, 0.0, 0),
-            WeatherLocation(UUID.randomUUID(),"Location 2", 0.0, 0.0, 0),
-            WeatherLocation(UUID.randomUUID(),"Location 3", 0.0, 0.0, 0)
-        )
-        TODO("Not yet implemented")
+        val locations = weatherDao.getWeatherLocations();
+        return locations.map {
+            WeatherLocation.mapLocalToDomain(it);
+        }
     }
 
     override suspend fun saveLocation(weatherLocation: WeatherLocation): Result<Unit> {
-        TODO("Not yet implemented")
+        weatherDao.insertWeatherLocations(WeatherLocation.mapDomainToLocal(weatherLocation));
+        return Result.success(Unit);
     }
 
     override suspend fun deleteLocation(weatherLocation: WeatherLocation): Result<Unit> {
@@ -59,7 +55,7 @@ class WeatherRepositoryImpl @Inject constructor(
         val validData = cachedData.filter {
             filterExpiredWeatherData(it)
         }.map {
-            mapLocalWeatherDataToDomain(it)
+            WeatherData.mapLocalToDomain(it);
         }.sortedBy {
             it.name
         }
@@ -67,13 +63,14 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMissingWeatherData() : List<WeatherLocation> {
+
         val savedLocations = weatherDao.getWeatherLocations()
         val cachedData = weatherDao.getAllWeatherData()
 
         val missingLocations = savedLocations.filter {
             filterValidWeatherData(it, cachedData)
         }.map {
-            mapLocalWeatherLocationToDomain(it)
+            WeatherLocation.mapLocalToDomain(it)
         }.sortedBy {
             it.name
         }
@@ -81,13 +78,14 @@ class WeatherRepositoryImpl @Inject constructor(
         return missingLocations
     }
 
-    override suspend fun updateWeatherData(location : WeatherLocation) : Result<WeatherData> {
+    override suspend fun updateWeatherData(location : WeatherLocation, cache : Boolean) : Result<WeatherData> {
         return Result.runCatching {
             val weather = weatherService.getForecast(location.latitude, location.longitude)
-            val localWeather = mapRemoteWeatherDataToLocal(weather)
-            weatherDao.insertWeatherDatas(localWeather)
-
-            val domainWeather = mapLocalWeatherDataToDomain(localWeather)
+            val domainWeather = WeatherData.mapRemoteToDomain(weather, location.id, location.name)
+            if(cache) {
+                val localWeather = WeatherData.mapDomainToLocal(domainWeather)
+                weatherDao.insertWeatherDatas(localWeather)
+            }
             return@runCatching domainWeather
         }
     }
@@ -103,32 +101,13 @@ class WeatherRepositoryImpl @Inject constructor(
             return delta in 0..<cacheThreshold
         }
         private fun filterExpiredWeatherData(data : WeatherDataEntity) : Boolean {
-            return isTimestampValid(data.timestamp)
+            return isTimestampValid(data.wd.timestamp)
         }
 
         private fun filterValidWeatherData(location : WeatherLocationEntity, cachedData : List<WeatherDataEntity>) : Boolean {
             return cachedData.none {
-                if(it.id != location.id) {
-                    return@none false
-                }
-                return@none !isTimestampValid(it.timestamp)
+                return@none (it.wd.locationId == location.id) && isTimestampValid(it.wd.timestamp)
             }
-        }
-
-        private fun mapLocalWeatherLocationToDomain(data : WeatherLocationEntity) : WeatherLocation {
-            TODO()
-        }
-
-        private fun mapLocalWeatherDataToDomain(data : WeatherDataEntity) : WeatherData {
-            TODO()
-        }
-
-        private fun mapRemoteWeatherLocationToLocal(data : GeocodingGetResponse) : WeatherLocationEntity {
-            TODO()
-        }
-
-        private fun mapRemoteWeatherDataToLocal(data : ForecastResponse) : WeatherDataEntity {
-            TODO()
         }
     }
 

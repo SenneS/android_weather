@@ -1,11 +1,25 @@
 package be.senne.meerweer.data.local
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Embedded
+import androidx.room.Relation
 
-@Entity("weather_data")
+
+
 data class WeatherDataEntity(
-    @PrimaryKey
-    val id : Long,
-    var timestamp : Long
+    @Embedded
+    val wd : WeatherContainerEntity,
+
+    @Relation(
+        entity = WeatherHourDataEntity::class,
+        parentColumn = "locationId",
+        entityColumn = "locationId"
+    )
+    val hourlyData : List<WeatherHourDataEntity>,
+
+    @Relation(
+        entity = WeatherDayDataEntity::class,
+        parentColumn = "locationId",
+        entityColumn = "locationId"
+    )
+    val dailyData : List<WeatherDayDataEntity>
 )

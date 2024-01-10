@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import kotlinx.coroutines.flow.Flow
@@ -20,26 +21,29 @@ abstract class WeatherDao {
     abstract suspend fun getWeatherLocations() : List<WeatherLocationEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract suspend fun _insertWeatherDatas(vararg datas : WeatherDataEntity)
+    protected abstract suspend fun insertWeatherContainers(datas : List<WeatherContainerEntity>)
 
-    suspend fun insertWeatherDatas(vararg datas : WeatherDataEntity) {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun insertWeatherDailyData(datas : List<WeatherDayDataEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun insertWeatherHourlyData(datas : List<WeatherHourDataEntity>)
+
+    @Transaction
+    open suspend fun insertWeatherDatas(vararg datas : WeatherDataEntity) {
         datas.forEach {
             it.apply {
-                timestamp = System.currentTimeMillis()
+                this.wd.timestamp = System.currentTimeMillis();
             }
         }
-        _insertWeatherDatas(*datas)
+        insertWeatherContainers(datas.map { x -> x.wd });
+        datas.forEach {
+            insertWeatherDailyData(it.dailyData);
+            insertWeatherHourlyData(it.hourlyData);
+        }
     }
-
-    @Query("SELECT * FROM weather_data")
-    abstract fun getAllWeatherDataFlow() : Flow<List<WeatherDataEntity>>
 
     @Query("SELECT * FROM weather_data")
     abstract suspend fun getAllWeatherData() : List<WeatherDataEntity>
 
-    @Query("SELECT * FROM weather_data WHERE id = :id")
-    abstract fun getWeatherDataFlow(id : Long) : Flow<WeatherDataEntity>
-
-    @Query("SELECT * FROM weather_data WHERE id = :id")
-    abstract suspend fun getWeatherData(id : Long) : WeatherDataEntity
 }

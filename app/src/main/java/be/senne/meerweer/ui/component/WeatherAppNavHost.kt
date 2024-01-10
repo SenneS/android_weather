@@ -78,7 +78,7 @@ fun WeatherAppNavigationDrawerContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Het Weer",
+                text = stringResource(R.string.app_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )

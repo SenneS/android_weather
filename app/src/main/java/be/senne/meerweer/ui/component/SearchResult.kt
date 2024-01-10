@@ -22,14 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.senne.meerweer.R
+import be.senne.meerweer.domain.model.CountryCode
+import be.senne.meerweer.domain.model.WeatherLocation
+import java.util.UUID
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchResult(
+    searchData: WeatherLocation,
     onOpenSearchResult: () -> Unit
 ) {
     Card(
@@ -41,17 +47,17 @@ fun SearchResult(
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(
                 IntrinsicSize.Min)) {
-                val icon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.be))
+                val icon = rememberVectorPainter(image = ImageVector.vectorResource(id = searchData.country.resource))
                 Icon(
                     painter = icon,
-                    contentDescription = "Flag",
+                    contentDescription = stringResource(R.string.search_result_flag),
                     tint = Color.Unspecified,
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp, vertical = 5.dp)
                         .size(48.dp)
                 )
                 Text(
-                    text = "Belgium, Leuven",
+                    text = searchData.name,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -60,11 +66,13 @@ fun SearchResult(
 
                     },
                 ){
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Location")
+                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.location_save))
                 }
             }
+            val dir1 = if(searchData.latitude > 0) R.string.wind_direction_short_north else R.string.wind_direction_short_south
+            val dir2 = if(searchData.longitude > 0) R.string.wind_direction_short_west else R.string.wind_direction_short_east
             Text(
-                text = "Flanders (99.99° E 99.99°N)",
+                text = "${searchData.extra} (${searchData.latitude}°${stringResource(dir1)} ${searchData.longitude}°${stringResource(dir2)})",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
             )
@@ -80,5 +88,5 @@ fun SearchResultExpanded() {
 @Preview
 @Composable
 fun SearchResultPreview() {
-    SearchResult({})
+    SearchResult(WeatherLocation(Random.nextLong(), "Belgium, Leuven", "Flanders", CountryCode.US,99.99, 99.99),{})
 }

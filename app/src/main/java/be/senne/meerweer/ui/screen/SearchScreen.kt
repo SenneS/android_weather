@@ -1,5 +1,6 @@
 package be.senne.meerweer.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -22,14 +24,18 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import be.senne.meerweer.R
 import be.senne.meerweer.ui.component.SearchResult
 import be.senne.meerweer.ui.component.WeatherCard
 import be.senne.meerweer.ui.component.fakeWeatherData
@@ -44,6 +50,15 @@ import kotlinx.coroutines.flow.asStateFlow
 @Composable
 fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
     val ui = state.value
+    val context = LocalContext.current
+    val str = stringResource(R.string.location_saved)
+
+    LaunchedEffect(ui.locationSaved) {
+        if(ui.locationSaved) {
+            Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     SearchBar(
         query = ui.searchTerm,
         onQueryChange =
@@ -58,12 +73,12 @@ fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
 
         },
         placeholder = {
-            Text("Search Locations...")
+            Text(stringResource(R.string.searchbar_placeholder))
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.searchbar_description),
                 tint = MaterialTheme.colorScheme.onSurface
             )
         }
@@ -74,10 +89,10 @@ fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
             }
             else {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(count = 20) {
-                        SearchResult({
-                            onEvent(SearchEvent.OpenSearchResult(""))
-                        })
+                    items(items=ui.searchResults, key={it->it.id}) {
+                        SearchResult(it) {
+                            onEvent(SearchEvent.OpenSearchResult(it))
+                        }
                     }
                 }
             }
@@ -89,7 +104,7 @@ fun SearchScreen(state : State<SearchState>, onEvent: (SearchEvent) -> Unit) {
         ui.searchResultData.getOrNull()?.let{
             CardSelected(
                 {
-                    onEvent(SearchEvent.SaveLocation(""))
+                    onEvent(SearchEvent.SaveLocation(ui.openLocation))
                 },
                 {
                     onEvent(SearchEvent.CloseSearchResult(""))
@@ -129,11 +144,14 @@ fun CardSelected(
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
                 TopAppBar(
                     title = {
-                        Text(text = "Search Result")
+                        Text(text = stringResource(R.string.search_result_title))
                             },
                     actions = {
                         IconButton(onClick = { onSave() }) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = "")
+                            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(
+                                R.string.search_result_description
+                            )
+                            )
                         }
                     }
                 )

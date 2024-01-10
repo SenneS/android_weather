@@ -3,6 +3,7 @@ package be.senne.meerweer.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.senne.meerweer.domain.model.MeasurementUnit
 import be.senne.meerweer.domain.model.WeatherData
 import be.senne.meerweer.domain.model.WeatherLocation
 import be.senne.meerweer.domain.repository.PreferencesRepository
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -39,16 +41,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun updateWeatherInfo() {
-        val cachedData  =listOf(
-            WeatherData("D10"),
-            WeatherData("D20"),
-            WeatherData("D30"),
-        )//= weatherRepository.getCachedWeatherData()
-        val missingData = listOf(
-            WeatherLocation(UUID.randomUUID(), "L10", 0.0, 0.0, 0),
-            WeatherLocation(UUID.randomUUID(), "L20", 0.0, 0.0, 0),
-            WeatherLocation(UUID.randomUUID(), "L30", 0.0, 0.0, 0),
-        )//= weatherRepository.getMissingWeatherData()
+        val cachedData  = weatherRepository.getCachedWeatherData()
+        val missingData = weatherRepository.getMissingWeatherData()
 
         val mapCachedData = mutableMapOf<Int, WeatherData>()
         val mapMissingData = mutableMapOf<Int, WeatherLocation>()
@@ -74,24 +68,33 @@ class HomeViewModel @Inject constructor(
 
         val num = cachedData.size + missingData.size
 
+        val speedUnit = preferencesRepository.getSpeedUnit().getOrDefault(MeasurementUnit.METRIC)
+        val tempUnit = preferencesRepository.getTemperatureUnit().getOrDefault(MeasurementUnit.METRIC)
+        val precipUnit = preferencesRepository.getPrecipitationUnit().getOrDefault(MeasurementUnit.METRIC)
+
         _state.update { it ->
             it.copy(
                 locationsLoading = false,
+                locationLoading = false,
                 locationCount = num,
-                locationData = mapCachedData.mapValues {(i,it) -> mapWeatherDataToUI(it) }
+                locationData = mapCachedData.mapValues {(i,it) -> WeatherDataUI.fromWeatherData(it, speedUnit, tempUnit, precipUnit) }
             )
         }
 
 
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(3000)
-            Log.wtf("", "H2")
-            val locationMap = _state.value.locationData.toMutableMap()
-            locationMap[4] = fakeWeatherData()
-            _state.update { it.copy(locationData = locationMap, locationLoading = false) }
-        }
 
-        Log.wtf("", "H1")
+        CoroutineScope(Dispatchers.IO).launch {
+            mapMissingData.forEach { (i, v) ->
+                val data = weatherRepository.updateWeatherData(v, true)
+                data.onSuccess {wd ->
+                    _state.update {
+                        val locationMap = _state.value.locationData.toMutableMap()
+                        locationMap[i] = WeatherDataUI.fromWeatherData(wd, speedUnit, tempUnit, precipUnit);
+                        it.copy(locationData = locationMap)
+                    }
+                }
+            }
+        }
     }
 
     fun onEvent(event : HomeEvent) {
@@ -103,10 +106,5 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-    private fun mapWeatherDataToUI(data : WeatherData) : WeatherDataUI {
-        return fakeWeatherData()
-    }
-
 
 }

@@ -10,5 +10,5 @@ interface WeatherRepository {
     suspend fun deleteLocation(weatherLocation: WeatherLocation) : Result<Unit>
     suspend fun getCachedWeatherData() : List<WeatherData>
     suspend fun getMissingWeatherData() : List<WeatherLocation>
-    suspend fun updateWeatherData(location : WeatherLocation) : Result<WeatherData>
+    suspend fun updateWeatherData(location : WeatherLocation, cache : Boolean) : Result<WeatherData>
 }

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
@@ -36,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.senne.meerweer.R
+import be.senne.meerweer.domain.model.WeatherWindDirection
 import be.senne.meerweer.ui.model.WeatherCurrentDataUI
 import be.senne.meerweer.ui.model.WeatherDataUI
 import be.senne.meerweer.ui.model.WeatherDayDataUI
@@ -71,7 +72,9 @@ fun WeatherHeaderSection(uiData: WeatherDataUI) {
     Box(modifier = Modifier.scale(1f)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.weight(1f))
-            Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloud", modifier = Modifier.size(120.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(id = uiData.now.weatherIcon), contentDescription = stringResource(
+                id = uiData.now.weatherText
+            ), modifier = Modifier.size(120.dp), tint = MaterialTheme.colorScheme.onSurface)
             Spacer(modifier = Modifier.weight(1f))
             Column {
                 Text(
@@ -80,7 +83,7 @@ fun WeatherHeaderSection(uiData: WeatherDataUI) {
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "${uiData.now.temperature}°C",
+                    text = uiData.now.temperature,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -95,9 +98,11 @@ fun WeatherMainDataSection(uiData: WeatherCurrentDataUI) {
 
     Row {
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(R.drawable.wind_icon), contentDescription = stringResource(
+                R.string.current_wind_speed
+            ), modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
             Text(
-                text = "Wind: ${uiData.wind}",
+                text = "${stringResource(R.string.wind)}: ${uiData.wind}",
                 modifier = Modifier.padding(top= 10.dp),
                 style=MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
@@ -105,20 +110,28 @@ fun WeatherMainDataSection(uiData: WeatherCurrentDataUI) {
             )
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.compass), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
-            Text(text = "Wind Direction: ${uiData.windDirection}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(R.drawable.compass), contentDescription = stringResource(
+                R.string.current_wind_direction
+            ), modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "${stringResource(R.string.wind_direction)}: ${stringResource(id = uiData.windDirectionLongText)}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
-            Text(text = "Precipitation: ${uiData.precipitation}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(R.drawable.drop_icon), contentDescription = stringResource(
+                R.string.current_precipitation
+            ), modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "${stringResource(R.string.precipitation)}: ${uiData.precipitation}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
-            Text(text = "Sunrise: ${uiData.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(R.drawable.day_sunny_icon), contentDescription = stringResource(
+                R.string.today_s_sunrise
+            ), modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "${stringResource(R.string.sunrise)}: ${uiData.sunrise}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
         Column(modifier= Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = "", modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
-            Text(text = "Sunset: ${uiData.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
+            Icon(painter = painterResource(R.drawable.moon_line_icon), contentDescription = stringResource(
+                R.string.today_s_sunset
+            ), modifier=Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurface)
+            Text(text = "${stringResource(R.string.sunset)}: ${uiData.sunset}", modifier = Modifier.padding(top= 10.dp), style=MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -134,7 +147,7 @@ fun WeatherHourSection(uiData: List<WeatherHourDataUI>) {
                     Text(text = it.hour)
                     Text(text = it.temperature)
                     Text(text = it.precipitation)
-                    Icon(imageVector = Icons.Default.Cloud, contentDescription = "Cloudy")
+                    Icon(painter = painterResource(id = it.weatherIcon), contentDescription = stringResource(id = it.weatherText), modifier= Modifier.size(35.dp))
                 }
             }
         }
@@ -144,41 +157,45 @@ fun WeatherHourSection(uiData: List<WeatherHourDataUI>) {
 @Composable
 fun WeatherDaySection(uiData: List<WeatherDayDataUI>) {
     Column(modifier= Modifier.fillMaxSize()) {
-        val days = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
         uiData.forEach {
             var expanded by remember { mutableStateOf(false) }
             Card(modifier = Modifier
-                .fillMaxWidth().heightIn(50.dp)
-                .padding(vertical = 5.dp, horizontal = 10.dp).clickable {
+                .fillMaxWidth()
+                .heightIn(50.dp)
+                .padding(vertical = 5.dp, horizontal = 10.dp)
+                .clickable {
                     expanded = !expanded
                 }) {
 
                 Column(modifier = Modifier.animateContentSize()) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
+                        Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = stringResource(
+                            R.string.weather_day_expand_button
+                        )
+                        )
                         Text(text = it.day, modifier=Modifier.weight(1f))
                         Text(text = "${it.minTemperature} / ${it.maxTemperature}", textAlign = TextAlign.End, modifier = Modifier.padding(horizontal=5.dp))
                     }
                     if(expanded) {
-                        Text(text = "Expanded Content. ".repeat(5))
-                    }
-                }
-
-/*
-                Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = "")
-                    }
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(text = it)
-
-                        if(expanded) {
-                            Text(text = "Expanded Content. ".repeat(5))
+                        Column {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(painter= painterResource(id = it.weatherIcon), contentDescription = stringResource(
+                                    id = it.weatherText
+                                ), modifier=Modifier.size(20.dp))
+                                Spacer(modifier=Modifier.weight(1f))
+                                Text(text = stringResource(id = it.weatherText), modifier = Modifier.padding(end= 10.dp), style=MaterialTheme.typography.bodySmall)
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(painter= painterResource(id = R.drawable.compass), contentDescription = stringResource(
+                                    id = it.windDirectionLongText
+                                ), modifier=Modifier.size(20.dp))
+                                Spacer(modifier=Modifier.weight(1f))
+                                Text(text = stringResource(id = it.windDirectionLongText), modifier = Modifier.padding(end= 10.dp), style=MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
- */
             }
         }
     }
@@ -192,10 +209,13 @@ fun fakeWeatherData() : WeatherDataUI {
         "39°C",
         "130 km/h",
         "260 km/h",
-        "South",
+        R.string.wind_direction_long_north,
+        R.string.wind_direction_short_north,
         "800mm",
         "12:00",
-        "18:00"
+        "18:00",
+        R.drawable.cloud_wind_icon,
+        R.string.weather_cloudy
     )
 
     val hourlyWeatherData = List(24) {
@@ -203,7 +223,7 @@ fun fakeWeatherData() : WeatherDataUI {
         val precipitation = "${Random.nextInt(0, 100)}%"
         val temperature = "${Random.nextInt(-15, 46)}°C"
         val icon = ""
-        WeatherHourDataUI(hour, precipitation, temperature, icon)
+        WeatherHourDataUI(hour, precipitation, temperature, R.string.weather_clear_sky, R.drawable.day_sunny_icon)
     }
 
     val days = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
@@ -214,15 +234,14 @@ fun fakeWeatherData() : WeatherDataUI {
         val precipitation = "${Random.nextInt(0, 835)}mm"
         val wind = "km/h"
         val gusts = "km/h"
-        val direction = "South"
+        val direction = WeatherWindDirection.SOUTH
         val icon = ""
-        WeatherDayDataUI(days[it], minTemperature, maxTemperature, precipitation, wind, gusts, direction, icon)
+        WeatherDayDataUI(days[it], minTemperature, maxTemperature, precipitation, wind, gusts, direction.long_text, direction.short_text, R.string.weather_clear_sky, R.drawable.day_sunny_icon)
     }
 
 
     val weatherData = WeatherDataUI(
-        UUID.randomUUID(),
-        timestamp = Instant.now(),
+        timestamp = 0,
         location,
         currentWeatherData,
         hourlyWeatherData,

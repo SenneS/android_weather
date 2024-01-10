@@ -12,6 +12,8 @@ data class ForecastResponse(
     val timezone: String?,
     val timezone_abbreviation: String?,
     val utc_offset_seconds: Int?,
+    val current : ForecastCurrent?,
+    val current_units : ForecastCurrentUnits?,
 
     val reason: String?,
     val error: Boolean?

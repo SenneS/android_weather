@@ -7,8 +7,8 @@ data class ForecastDailyUnits(
     val temperature_2m_max: String,
     val temperature_2m_min: String,
     val time: String,
-    val weathercode: String,
-    val winddirection_10m_dominant: String,
-    val windgusts_10m_max: String,
-    val windspeed_10m_max: String
+    val weather_code: String,
+    val wind_direction_10m_dominant: String,
+    val wind_gusts_10m_max: String,
+    val wind_speed_10m_max: String
 )

@@ -27,9 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import be.senne.meerweer.R
 import be.senne.meerweer.domain.model.MeasurementUnit
 import be.senne.meerweer.ui.event.SettingsEvent
 import be.senne.meerweer.ui.state.SettingsState
@@ -44,7 +47,7 @@ fun SettingsScreen(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit
         topBar = {
             TopAppBar(title = {
                 Text(
-                    text="Settings",
+                    text= stringResource(R.string.screen_settings_title),
                     style=MaterialTheme.typography.titleLarge
                 )
             })
@@ -65,49 +68,49 @@ fun SettingsScreen(state: State<SettingsState>, onEvent: (SettingsEvent) -> Unit
 
                 val temp_items = listOf(
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "°C",
+                        stringResource(R.string.settings_temp_unit_metric),
                         MeasurementUnit.METRIC
                     ),
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "°F",
+                        stringResource(R.string.settings_temp_unit_imperial),
                         MeasurementUnit.IMPERIAL
                     )
                 )
                 val wind_items = listOf(
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "km/h",
+                        stringResource(R.string.settings_speed_unit_metric),
                         MeasurementUnit.METRIC
                     ),
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "mph",
+                        stringResource(R.string.settings_speed_unit_imperial),
                         MeasurementUnit.IMPERIAL
                     )
                 )
                 val precipitation_items = listOf(
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "mm",
+                        stringResource(R.string.settings_precipitation_unit_metric),
                         MeasurementUnit.METRIC
                     ),
                     SettingToggleGroupEntry<MeasurementUnit>(
-                        "in",
+                        stringResource(R.string.settings_precipitation_unit_imperial),
                         MeasurementUnit.IMPERIAL
                     )
                 )
 
-                SettingGroup("Units of Measurement") {
-                    SettingToggle("Temperature Unit", ui.currentTemperatureUnit, temp_items, {
+                SettingGroup(stringResource(R.string.settings_group_units)) {
+                    SettingToggle(stringResource(R.string.settings_temp_unit), ui.currentTemperatureUnit, temp_items) {
                         onEvent(SettingsEvent.SetTemperatureUnit(it))
-                    })
-                    SettingToggle("Speed Unit", ui.currentSpeedUnit, wind_items, {
+                    }
+                    SettingToggle(stringResource(R.string.settings_velocity_unit), ui.currentSpeedUnit, wind_items) {
                         onEvent(SettingsEvent.SetSpeedUnit(it))
-                    })
+                    }
                     SettingToggle(
-                        "Precipitation Unit",
+                        stringResource(R.string.settings_precipitation_unit),
                         ui.currentPrecipitationUnit,
-                        precipitation_items,
-                        {
-                            onEvent(SettingsEvent.SetPrecipitationUnit(it))
-                        })
+                        precipitation_items
+                    ) {
+                        onEvent(SettingsEvent.SetPrecipitationUnit(it))
+                    }
                 }
             }
         }
@@ -139,8 +142,8 @@ data class SettingToggleGroupEntry<T>(
 fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingToggleGroupEntry<T>>, onToggle: (T) -> Unit) {
     Surface {
         Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = name)
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.testTag("ToggleItems")) {
+                Text(text = name, modifier = Modifier.testTag("ToggleItemName"))
                 Spacer(modifier = Modifier.weight(1f))
 
                 Row(modifier = Modifier.width(200.dp)) {
@@ -180,12 +183,12 @@ fun <T> SettingToggle(name: String, selectedIndex : Int, items : List<SettingTog
                             }
                         }
 
-                        OutlinedButton(modifier = Modifier.weight(1f),
+                        OutlinedButton(modifier = Modifier.weight(1f).testTag("ToggleButton"),
                             onClick = {
                                 onToggle(it.value)
                             },
                             shape = RoundedCornerShape(topStartPercent = topStartP, topEndPercent = topEndP, bottomEndPercent = bottomEndP, bottomStartPercent = bottomStartP),
-                            colors = buttonColors
+                            colors = buttonColors,
                         ) {
                             Text(it.name)
                         }
